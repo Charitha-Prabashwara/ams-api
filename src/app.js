@@ -2,7 +2,6 @@ const express = require('express');
 const app = express();
 
 const path = require('path');
-const cors = require('cors');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
@@ -10,6 +9,7 @@ const Redis = require('ioredis');
 const compression = require('compression');
 const { DB_connect } = require('./database/db');
 const envTypes = require('./config/EnvTypes')
+const corsMiddleware = require('./cors/cors')
 // Database connection
 DB_connect();
 
@@ -27,32 +27,8 @@ app.use(
 
 // //Uncomment this when using local development
 
-const allowedOrigins = [
-  "http://localhost:3000"
-];
 
-// // // CORS options
-const corsOptions = {
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
-  allowedHeaders: [
-    "Origin",
-    "X-Requested-With",
-    "Content-Type",
-    "Accept",
-    "Authorization",
-    "X-Token"
-  ],
-  credentials: true,
-};
-
-app.use(cors(corsOptions));
+app.use(corsMiddleware);
 // //this
 
 app.use(morgan('tiny'));

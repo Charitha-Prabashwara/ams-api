@@ -14,6 +14,9 @@ class Config {
       this.REFRESH_TOKEN_TTL = env.REFRESH_TOKEN_TTL;
       this.NODE_ENV = env.NODE_ENV;
       this.REFRESH_TOKEN_COOKIE_TTL = env.REFRESH_TOKEN_COOKIE_TTL;
+      this.ALLOWED_ORIGINS = env.ALLOWED_ORIGINS;
+      this.ALLOWED_METHODS = env.ALLOWED_METHODS;
+      this.ALLOWED_HEADERS = env.ALLOWED_HEADERS;
       Config.instance = this;
     }
     return Config.instance;

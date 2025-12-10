@@ -25,6 +25,17 @@ const LogoutFailed = require('./AuthServiceErrors/LogoutFailedError');
 const UserUpdateFailed = require('./UserServiceErrors/UserUpdateFailedError');
 
 const DepartmentNotFoundError = require('./DepartmentServiceErrors/DepartmentNotFoundError');
+
+const NoAllowedOriginsError = require('./corsErrors/noAllowedOriginsError');
+const InvalidOriginsFormat = require('./corsErrors/invalidOriginsFormatError');
+const AllowedOriginsIsNotAnArrayError = require('./corsErrors/allowedOriginsIsNotArrayError')
+const NoAllowedMethodsError = require('./corsErrors/noAllowedMethodsError');
+const InvalidMethodsFormatError = require('./corsErrors/invalidMethodsFormatError')
+const AllowedMethodsNotAnArrayError = require('./corsErrors/allowedMethodsNotAnArrayError')
+const InvalidHeadersFormatError = require('./corsErrors/invalidHeadersFormatError')
+const NoAllowedHeadersError = require('./corsErrors/noAllowedHeadersError')
+const AllowedHeadersNotAnArrayError = require('./corsErrors/allowedHeadersNotAnArrayError')
+const NotAllowedRequestByCorsError = require('./corsErrors/notAllowedRequestByCorsError')
 module.exports = {
   UserNotFoundError,
   InvalidUserIdError,
@@ -47,4 +58,14 @@ module.exports = {
   InvalidAuthFormatError,
   LogoutFailed,
   UserUpdateFailed,
+  NoAllowedOriginsError,
+  InvalidOriginsFormat,
+  AllowedOriginsIsNotAnArrayError,
+  NoAllowedMethodsError,
+  InvalidMethodsFormatError,
+  AllowedMethodsNotAnArrayError,
+  InvalidHeadersFormatError,
+  NoAllowedHeadersError,
+  AllowedHeadersNotAnArrayError,
+  NotAllowedRequestByCorsError
 };
