@@ -11,8 +11,7 @@ const envTypes = require('./config/EnvTypes')
 const corsMiddleware = require('./cors/cors')
 
 
-app.use(ErrorTranslator);
-app.use(ErrorHandler);
+
 
 DB_connect(); // Database connection
 
@@ -44,4 +43,6 @@ app.use('/api/v1/', base_router);
 app.use('/api/v1/admin/', adminRouter);
 app.use('/api/v1/department/', departmentRouter);
 
+app.use(ErrorTranslator);
+app.use(ErrorHandler);
 module.exports = app;
