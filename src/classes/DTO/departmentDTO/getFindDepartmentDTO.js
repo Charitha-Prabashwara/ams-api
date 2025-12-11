@@ -7,7 +7,7 @@ class GetFindDepartmentDTO {
       shortName: Joi.string().max(20),
       keyName: Joi.string().max(10),
       description: Joi.string(),
-      deleted: Joi.boolean().default(false),
+      deleted: Joi.boolean(),
       createdAt: Joi.date(),
       updatedAt: Joi.date(),
 
