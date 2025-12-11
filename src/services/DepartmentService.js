@@ -1,8 +1,7 @@
 const Department = require('../classes/Department');
 const NullDepartment = require('../classes/NullDepartment');
 const DepartmentBuilder = require('../classes/DepartmentBuilder');
-const { DepartmentNotFoundError } = require('../errors');
-
+const deptClass = new Department()
 /**
  * @class DepartmentService
  * @classdesc
@@ -19,8 +18,6 @@ class DepartmentService {
    * Creates a reusable Department model instance for repeated DB operations.
    */
   constructor() {
-    /** @private */
-    this.deptClass = new Department();
   }
 
   /**
@@ -33,8 +30,8 @@ class DepartmentService {
    *
    * @throws {Error} Propagates any underlying database or model errors.
    */
-  async getDepartmentById(id) {
-    return this.deptClass.findById(id);
+  async getDepartmentById(id, select=[], filter={}) {
+    return deptClass.findById(id, select, filter);
   }
 
   /**
@@ -112,11 +109,11 @@ class DepartmentService {
    * If the deletion process encounters database/model errors.
    */
   async deleteDepartmentById(id) {
-    return this.deptClass.deleteById(id);
+    return deptClass.deleteById(id);
   }
 
   async updateDepartmentById(data = {}) {
-    return this.deptClass.findByIdAndUpdate(data);
+    return deptClass.findByIdAndUpdate(data);
   }
 
   isNullDepartment(dept) {

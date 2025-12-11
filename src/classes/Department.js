@@ -56,9 +56,9 @@ class Department {
     }
   }
 
-  async findById(id, select = []) {
+  async findById(id, select = [], filter={}) {
     try {
-      const dept = await repository.findById(id, select);
+      const dept = await repository.findById(id, select, filter);
       return this.#wrapToDepartment(dept);
     } catch (error) {
       throw error;
