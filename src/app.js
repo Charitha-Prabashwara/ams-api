@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const { ErrorTranslator, ErrorHandler } = require('./middleware');
 
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
@@ -8,6 +9,10 @@ const compression = require('compression');
 const { DB_connect } = require('./database/db');
 const envTypes = require('./config/EnvTypes')
 const corsMiddleware = require('./cors/cors')
+
+
+app.use(ErrorTranslator);
+app.use(ErrorHandler);
 
 DB_connect(); // Database connection
 
