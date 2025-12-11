@@ -1,6 +1,5 @@
 const Joi = require('joi');
 const { ValidationFailedError } = require('../../../errors');
-const { userTypes } = require('../../../config');
 class CreateDepartmentDTO {
   constructor(data) {
     const schema = Joi.object({
