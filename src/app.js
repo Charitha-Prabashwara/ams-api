@@ -1,44 +1,27 @@
 const express = require('express');
 const app = express();
 
-const path = require('path');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
-const Redis = require('ioredis');
 const compression = require('compression');
 const { DB_connect } = require('./database/db');
 const envTypes = require('./config/EnvTypes')
 const corsMiddleware = require('./cors/cors')
-// Database connection
-DB_connect();
 
-app.use(
-  compression({
-    threshold: 1024, // compress only if response > 1 KB
-  }),
-);
+DB_connect(); // Database connection
 
-// const redis = new Redis({
-//   host: '192.168.1.100',   // Replace with your Redis server IP
-//   port: 6379,              // Replace with your Redis port if different
-//   password: 'yourpassword' // If Redis is password-protected
-// });
-
-// //Uncomment this when using local development
-
+app.use(compression({threshold: 1024}));
 
 app.use(corsMiddleware);
-// //this
 
 app.use(morgan('tiny'));
 app.use(cookieParser());
 app.use(express.json({ limit: '10mb' }));
 app.use(bodyParser.json({ limit: '10mb' }));
 
-// // Swagger setup
-if (process.env.NODE_ENV !== envTypes.PRODUCTION) {
 
+if (process.env.NODE_ENV !== envTypes.PRODUCTION) {
  const swaggerUi = require('swagger-ui-express');
  const swaggerJsDoc = require('swagger-jsdoc');
  const swaggerOptions = require('./docs/swagger/swaggerOptions');
@@ -50,10 +33,8 @@ if (process.env.NODE_ENV !== envTypes.PRODUCTION) {
 
 }
 
-// // Routes imports
 const { base_router, adminRouter, departmentRouter } = require('./routes');
 
-// // Routes
 app.use('/api/v1/', base_router);
 app.use('/api/v1/admin/', adminRouter);
 app.use('/api/v1/department/', departmentRouter);
