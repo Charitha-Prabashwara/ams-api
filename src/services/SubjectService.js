@@ -25,10 +25,16 @@ class SubjectService{
      * Retrieve a subject by its unique identifier.
      *
      * @async
-     * @param {String|Number} id - Unique ID of the subject.
+     * @param {String} id - Unique ID of the subject.
      * @param {Array<string>} [select=[]] - Fields to select in the result.
-     * @param {Object} [filter={}] - Additional filter criteria.
-     * @returns {Promise<Object|null>} The subject object or null if not found.
+     * @param {Object} [filter] - Additional filter criteria.
+     * @param {String} [filter.name] - Filter by name.
+     * @param {String} [filter.code] - Filter by code.
+     * @param {Number} [filter.credits] - Filter by credit value.
+     * @param {Boolean} [filter.deleted] - Filter by deleted status.
+     * @param {Number} [filter.createdAt_timestamp] - Filter by creation timestamp.
+     * @param {Number} [filter.updatedAt_timestamp] - Filter by update timestamp.
+     * @returns {Promise<Object|Null>} The subject object or null if not found.
      */
     async getSubjectById(id, select=[], filter={}){
         return subjectClass.findById(id, select, filter)
@@ -65,7 +71,7 @@ class SubjectService{
         return subjectClass.findByIdAndUpdate(data, select)
     }
 
-        /**
+    /**
      * Find one or more subjects based on dynamic search criteria.
      *
      * @async
