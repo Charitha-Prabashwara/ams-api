@@ -36,6 +36,8 @@ const InvalidHeadersFormatError = require('./corsErrors/invalidHeadersFormatErro
 const NoAllowedHeadersError = require('./corsErrors/noAllowedHeadersError')
 const AllowedHeadersNotAnArrayError = require('./corsErrors/allowedHeadersNotAnArrayError')
 const NotAllowedRequestByCorsError = require('./corsErrors/notAllowedRequestByCorsError')
+
+const SubjectNotFoundError = require('./SubjectServiceError/SubjectNotFoundError')
 module.exports = {
   UserNotFoundError,
   InvalidUserIdError,
@@ -67,5 +69,6 @@ module.exports = {
   InvalidHeadersFormatError,
   NoAllowedHeadersError,
   AllowedHeadersNotAnArrayError,
-  NotAllowedRequestByCorsError
+  NotAllowedRequestByCorsError,
+  SubjectNotFoundError
 };

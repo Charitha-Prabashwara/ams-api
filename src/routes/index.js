@@ -1,4 +1,5 @@
 const base_router = require('./base.route');
 const adminRouter = require('./user.routes/admin.routes');
 const departmentRouter = require('./department.routes/department.routes');
-module.exports = { base_router, adminRouter, departmentRouter };
+const subjectRouter = require('./subject.routes/subject.routes')
+module.exports = { base_router, adminRouter, departmentRouter, subjectRouter};

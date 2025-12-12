@@ -59,14 +59,23 @@ class SubjectService{
         return builder.create()
     }
 
-        /**
-     * Update an existing subject by its ID.
-     *
-     * @async
-     * @param {Object} data - Updated subject data. Must include an identifier.
-     * @param {Array<string>} [select=[]] - Optional fields to return.
-     * @returns {Promise<Object|null>} The updated subject or null if not found.
-     */
+/**
+ * Update an existing subject by its ID.
+ *
+ * @async
+ * @param {Object} data - Update payload.
+ * @param {String} data.id - ID of the subject to update. (required)
+ * @param {String} [data.name] - New subject name.
+ * @param {String} [data.code] - New subject code.
+ * @param {Number} [data.credits] - New credit value.
+ * @param {Boolean} [data.deleted] - Update deleted status.
+ * @param {Number} [data.createdAt_timestamp] - Override created timestamp (not recommended).
+ * @param {Number} [data.updatedAt_timestamp] - Override updated timestamp.
+ *
+ * @param {Array<string>} [select=[]] - Fields to return after update.
+ *
+ * @returns {Promise<Object|null>} Updated subject object, or null if not found.
+ */
     async updateSubjectById(data={}, select=[]){
         return subjectClass.findByIdAndUpdate(data, select)
     }
@@ -98,7 +107,8 @@ class SubjectService{
         return await subjectClass.find(options)
     }
 
-        /**
+    
+    /**
      * Soft-delete or permanently delete a subject by ID.
      *
      * @async
