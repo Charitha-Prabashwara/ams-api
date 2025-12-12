@@ -1,5 +1,6 @@
 const { SubjectRepository } = require('./DATABASE');
-
+const repository = new SubjectRepository();
+const NullSubject = require('./NullSubject');
 class Subject {
   id;
   name;
@@ -18,7 +19,7 @@ class Subject {
     this.createdAt = data.createdAt_timestamp;
     this.updatedAt = data.updatedAt_timestamp;
 
-    this.repository = new SubjectRepository();
+ 
   }
   #matchFieldsAndParams() {
     const fields = [
@@ -40,40 +41,49 @@ class Subject {
     return params;
   }
 
+    #wrapTONullSubject() {
+      return NullSubject;
+    }
+  
+    #wrapToSubject(obj) {
+      if (!obj) return this.#wrapTONullSubject();
+      return new Subject(obj);
+    }
+
   async save() {
     try {
       const params = this.#matchFieldsAndParams();
-      const subject = await this.repository.save(params);
+      const subject = await repository.save(params);
       return new Subject(subject);
     } catch (error) {
       throw error;
     }
   }
 
-  async findById(id) {
+  async findById(id, select=[], filter={}) {
     try {
-      const subject = await this.repository.findById(id);
-      return new Subject(subject);
+      const subject = await repository.findById(id, select, filter);
+      return this.#wrapToSubject(subject);
     } catch (error) {
       throw error;
     }
   }
 
-  async find() {
+  async find(options={}) {
     try {
       const params = this.#matchFieldsAndParams();
-      const subjects = await this.repository.find(params);
-      return subjects.map((subject) => new Subject(subject));
+      const subjects = await repository.find(params, options);
+      return subjects.map((subject) => this.#wrapToSubject(subject));
     } catch (error) {
       throw error;
     }
   }
 
-  async deleteOne() {
+  async deleteOne(select=[]) {
     try {
       const params = this.#matchFieldsAndParams();
-      const subject = await this.repository.deleteOne(params);
-      //not implemented
+      const subject = await repository.deleteOne(params, select);
+      return this.#wrapToSubject(subject)
     } catch (error) {
       throw error;
     }
@@ -81,9 +91,19 @@ class Subject {
 
   async deleteById(id) {
     try {
-      const subject = await this.repository.deleteById(id);
-      return new Subject(subject);
+      const subject = await repository.deleteById(id);
+      return this.#wrapToSubject(subject)
     } catch (error) {
+      throw error;
+    }
+  }
+
+    async findByIdAndUpdate(subObj, select = []) {
+    try {
+      const subject = await repository.save(subObj, select);
+      return this.#wrapToSubject(subject)
+      
+    }catch(error){
       throw error;
     }
   }

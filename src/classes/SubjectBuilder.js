@@ -1,6 +1,6 @@
 const { SubjectRepository } = require('./DATABASE');
 const Subject = require('./Subject');
-
+const repository = new SubjectRepository();
 class SubjectBuilder {
   name;
   code;
@@ -10,7 +10,7 @@ class SubjectBuilder {
     this.name - data.name;
     this.code = data.code;
     this.credits = data.credits;
-    this.repository = new SubjectRepository();
+    
   }
 
   #matchFieldsAndParams() {
@@ -27,7 +27,7 @@ class SubjectBuilder {
   async create() {
     try {
       const params = this.#matchFieldsAndParams();
-      const subject = await this.repository.create(params);
+      const subject = await repository.create(params);
       return new Subject(subject);
     } catch (error) {
       throw error;

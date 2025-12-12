@@ -1,6 +1,7 @@
 const { faker } = require('@faker-js/faker');
 const mongoose = require('mongoose');
 const Subject = require('../../../src/classes/Subject');
+const NullSubject = require('../../../src/classes/NullSubject')
 const SubjectBuilder = require('../../../src/classes/SubjectBuilder');
 const { MongoMemoryServer } = require('mongodb-memory-server');
 
@@ -101,6 +102,14 @@ describe('Subject Class Tests', () => {
     expect(deleted).toBeInstanceOf(Subject);
     expect(deleted.id).toStrictEqual(subjectId);
   });
+
+  test('should return null object when subject cant findByID', async () => {
+    const subject = new Subject();
+   
+    const deleted = await subject.deleteById("6939a19233486e9c4666f1f8");
+    expect(deleted).toBe(NullSubject);
+    
+  })
 
   test('Should handle save error gracefully', async () => {
     const badSubject = new Subject();
