@@ -77,7 +77,6 @@ describe('Subject service test', () => {
   test('should find subject by name', async () => { 
     const subjects = await service.findSubject({name:name});
     subjects.forEach(subject => {
-       console.log(subject);
       expect(subject).toBeDefined()
       expect(subject).not.toBe(NullSubject)
       expect(subject.name).toBe(name)
@@ -87,7 +86,6 @@ describe('Subject service test', () => {
     test('should find subject by code', async () => { 
     const subjects = await service.findSubject({code:code});
     subjects.forEach(subject => {
-       console.log(subject);
       expect(subject).toBeDefined()
       expect(subject).not.toBe(NullSubject)
       expect(subject.code).toBe(code)
@@ -97,7 +95,6 @@ describe('Subject service test', () => {
       test('should find subject by credits', async () => { 
     const subjects = await service.findSubject({credits:credits});
     subjects.forEach(subject => {
-       console.log(subject);
       expect(subject).toBeDefined()
       expect(subject).not.toBe(NullSubject)
       expect(subject.credits).toBe(credits)
@@ -107,7 +104,7 @@ describe('Subject service test', () => {
         test('should find subject by createdAt', async () => { 
     const subjects = await service.findSubject({createdAt_timestamp:Csubject.createdAt_timestamp});
     subjects.forEach(subject => {
-       console.log(subject);
+  
       expect(subject).toBeDefined()
       expect(subject).not.toBe(NullSubject)
       expect(subject.createdAt_timestamp).toBe(Csubject.createdAt_timestamp)
@@ -117,7 +114,6 @@ describe('Subject service test', () => {
   test('should find subject by updatedAt', async () => { 
     const subjects = await service.findSubject({updatedAt_timestamp:Csubject.updatedAt_timestamp});
     subjects.forEach(subject => {
-       console.log(subject);
       expect(subject).toBeDefined()
       expect(subject).not.toBe(NullSubject)
       expect(subject.updatedAt_timestamp).toBe(Csubject.updatedAt_timestamp)
