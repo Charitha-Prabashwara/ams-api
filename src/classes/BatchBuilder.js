@@ -1,5 +1,6 @@
 const { BatchRepository } = require('./DATABASE');
 const Batch = require('./Batch');
+const  repository = new BatchRepository();
 
 /**
  * BatchBuilder
@@ -39,7 +40,7 @@ class BatchBuilder {
   constructor(data = {}) {
     this.name = data.name;
     this.academic = data.academic;
-    this.repository = new BatchRepository();
+   
   }
   /**
    * Prepares a parameter object for database operations,
@@ -68,7 +69,7 @@ class BatchBuilder {
   async create() {
     try {
       const params = this.#matchFieldsAndParams();
-      const batch = await this.repository.create(params);
+      const batch = await repository.create(params);
       return new Batch(batch);
     } catch (error) {
       throw error;

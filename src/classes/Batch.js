@@ -1,23 +1,22 @@
-const { model } = require('mongoose');
 const { BatchRepository } = require('./DATABASE');
+const NullBatch = require('./NullBatch')
+const repository = new BatchRepository();
 class Batch {
   id;
   name;
-  lb;
-  up;
+  academic;
   createdAt_timestamp;
   updatedAt_timestamp;
   deleted;
 
   constructor(data = {}) {
-    this.id = data._id || data.id;
+    this.id = data._id ?? data.id;
     this.name = data.name;
     this.academic = data.academic;
     this.deleted = data.deleted;
     this.createdAt_timestamp = data.createdAt_timestamp;
     this.updatedAt_timestamp = data.updatedAt_timestamp;
-
-    this.repository = new BatchRepository();
+  
   }
 
   /**
@@ -44,49 +43,58 @@ class Batch {
     return params;
   }
 
-  async save() {
+    #wrapTONullBatch() {
+      return NullBatch;
+    }
+  
+    #wrapToBatch(obj) {
+      if (!obj) return this.#wrapTONullBatch();
+      return new Batch(obj);
+    }
+
+  async save(select=[]) {
     try {
       const params = this.#matchFieldsAndParams();
-      const batch = await this.repository.save(params);
-      return new Batch(batch);
+      const batch = await repository.save(params, select);
+      return this.#wrapToBatch(batch);
     } catch (error) {
       throw error;
     }
   }
 
-  async findById(id) {
+  async findById(id, select=[]) {
     try {
-      const batch = await this.repository.findById(id);
-      return new Batch(batch);
+      const batch = await repository.findById(id, select);
+      return this.#wrapToBatch(batch);
     } catch (error) {
       throw error;
     }
   }
 
-  async find() {
-    try {
-      const params = this.#matchFieldsAndParams();
-      const batches = await this.repository.find(params);
-      return batches.map((batch) => new Batch(batch));
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  async deleteOne() {
+  async find(options={}) {
     try {
       const params = this.#matchFieldsAndParams();
-      const batch = await this.repository.deleteOne(params);
-      return new Batch(batch);
+      const batches = await repository.find(params, options);
+      return batches.map((batch) => this.#wrapToBatch(batch));
     } catch (error) {
       throw error;
     }
   }
 
-  async deleteById(id) {
+  async deleteOne(select=[]) {
     try {
-      const batch = await this.repository.deleteById(id);
-      return new Batch(batch);
+      const params = this.#matchFieldsAndParams();
+      const batch = await repository.deleteOne(params, select);
+      return this.#wrapToBatch(batch);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async deleteById(id, select=[]) {
+    try {
+      const batch = await repository.deleteById(id, select);
+      return this.#wrapToBatch(batch);
     } catch (error) {
       throw error;
     }
