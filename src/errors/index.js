@@ -38,6 +38,8 @@ const AllowedHeadersNotAnArrayError = require('./corsErrors/allowedHeadersNotAnA
 const NotAllowedRequestByCorsError = require('./corsErrors/notAllowedRequestByCorsError')
 
 const SubjectNotFoundError = require('./SubjectServiceError/SubjectNotFoundError')
+
+const CourseNotFoundError = require('./CourseServiceErrors/CourseNotFoundError')
 module.exports = {
   UserNotFoundError,
   InvalidUserIdError,
@@ -70,5 +72,6 @@ module.exports = {
   NoAllowedHeadersError,
   AllowedHeadersNotAnArrayError,
   NotAllowedRequestByCorsError,
-  SubjectNotFoundError
+  SubjectNotFoundError,
+  CourseNotFoundError
 };

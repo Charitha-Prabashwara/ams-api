@@ -27,6 +27,11 @@ const {GetSubjectByCodeDTO} = require('./subjectDTO/getSubjectByCodeDTO')
 const {GetSubjectFindDTO} = require('./subjectDTO/getSubjectFindDTO')
 const {UpdateSubjectByIdDTO} = require('./subjectDTO/updateSubjectByIdDTO')
 const {DeleteSubjectByIdDTO} = require('./subjectDTO/deleteSubjectByIdDTO')
+
+const {CreateCourseDTO} = require('./courseDTO/createCourseDTO')
+const {UpdateCourseByIdDTO} = require('./courseDTO/updateCourseByIdDTO')
+const {GetCourseByIdDTO} = require('./courseDTO/getCourseByIdDTO')
+const {GetFindCourseDTO} = require('./courseDTO/getFindCourseDTO')
 module.exports = {
   CreateUserDTO,
   ErrorResponseDTO,
@@ -45,5 +50,9 @@ module.exports = {
   GetSubjectByCodeDTO,
   GetSubjectFindDTO,
   UpdateSubjectByIdDTO,
-  DeleteSubjectByIdDTO
+  DeleteSubjectByIdDTO,
+  CreateCourseDTO,
+  UpdateCourseByIdDTO,
+  GetCourseByIdDTO,
+  GetFindCourseDTO
 };

@@ -37,12 +37,13 @@ if (process.env.NODE_ENV !== envTypes.PRODUCTION) {
 
 }
 
-const { base_router, adminRouter, departmentRouter, subjectRouter} = require('./routes');
+const { base_router, adminRouter, departmentRouter, subjectRouter, corseRouter} = require('./routes');
 
 app.use('/api/v1/', base_router);
 app.use('/api/v1/admin/', adminRouter);
 app.use('/api/v1/department/', departmentRouter);
 app.use('/api/v1/subject/', subjectRouter);
+app.use('/api/v1/course', corseRouter)
 
 app.use(ErrorTranslator);
 app.use(ErrorHandler);
