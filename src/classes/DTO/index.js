@@ -32,6 +32,7 @@ const {CreateCourseDTO} = require('./courseDTO/createCourseDTO')
 const {UpdateCourseByIdDTO} = require('./courseDTO/updateCourseByIdDTO')
 const {GetCourseByIdDTO} = require('./courseDTO/getCourseByIdDTO')
 const {GetFindCourseDTO} = require('./courseDTO/getFindCourseDTO')
+const {DeleteCourseByIdDTO} = require('./courseDTO/deleteCourseByIdDTO')
 module.exports = {
   CreateUserDTO,
   ErrorResponseDTO,
@@ -54,5 +55,6 @@ module.exports = {
   CreateCourseDTO,
   UpdateCourseByIdDTO,
   GetCourseByIdDTO,
-  GetFindCourseDTO
+  GetFindCourseDTO,
+  DeleteCourseByIdDTO
 };
