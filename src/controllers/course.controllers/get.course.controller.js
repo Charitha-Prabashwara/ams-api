@@ -35,7 +35,7 @@ module.exports.getFindCourse = async(dto, req, res, next)=>{
                     sort:dto.sort
                }
 
-               const courses = await service.getFindCourse(data, {});
+               const courses = await service.getFindCourse(data, options);
              
                
               courses.forEach((course) => {
