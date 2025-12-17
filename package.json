@@ -20,6 +20,7 @@
   ],
   "main": "Server.js",
   "scripts": {
+    "build": "node esbuild.config.js",
     "pm2start": "pm2 start ecosystem.config.js --env production",
     "pm2dev": "pm2 start ecosystem.config.js --env development",
     "dev": "nodemon src/server.js",
@@ -55,6 +56,7 @@
     "uuid": "^11.1.0"
   },
   "devDependencies": {
+    "esbuild": "^0.27.2",
     "eslint": "^9.39.1",
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "^10.1.8",

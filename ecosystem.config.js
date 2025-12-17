@@ -2,16 +2,16 @@ module.exports = {
   apps: [
     {
       name: "ams-api",
-      script: "src/server.js",
+      script: process.env.NODE_ENV === "production" ? "build/app.js" : "src/server.js",
       instances: 1,
-      fork:true,
+      fork: true,
       autorestart: true,
       max_memory_restart: "200M",
-      watch: false,
+      watch: false, 
       env: {
         NODE_ENV: "development",
         PORT: 8080,
-        WATCH: true  
+        WATCH: true
       },
       env_production: {
         NODE_ENV: "production",
