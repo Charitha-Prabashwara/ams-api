@@ -33,6 +33,14 @@ const {UpdateCourseByIdDTO} = require('./courseDTO/updateCourseByIdDTO')
 const {GetCourseByIdDTO} = require('./courseDTO/getCourseByIdDTO')
 const {GetFindCourseDTO} = require('./courseDTO/getFindCourseDTO')
 const {DeleteCourseByIdDTO} = require('./courseDTO/deleteCourseByIdDTO')
+
+const {CreateSemesterDTO} = require('./semesterDTO/createSemesterDTO')
+
+const {CreateBatchDTO} = require('./batchDTO/createBatchDTO')
+const {GetBatchByIdDTO} = require('./batchDTO/getBatchByIdDTO')
+const {UpdateBatchByIdDTO} = require('./batchDTO/updateBatchByIdDTO')
+const {GetFindBatchDTO} = require('./batchDTO/getFindBatchDTO')
+const {DeleteBatchByIdDTO} = require('./batchDTO/deleteBatchByIdDTO')
 module.exports = {
   CreateUserDTO,
   ErrorResponseDTO,
@@ -56,5 +64,11 @@ module.exports = {
   UpdateCourseByIdDTO,
   GetCourseByIdDTO,
   GetFindCourseDTO,
-  DeleteCourseByIdDTO
+  DeleteCourseByIdDTO,
+  CreateSemesterDTO,
+  CreateBatchDTO,
+  GetBatchByIdDTO,
+  UpdateBatchByIdDTO,
+  GetFindBatchDTO,
+  DeleteBatchByIdDTO
 };

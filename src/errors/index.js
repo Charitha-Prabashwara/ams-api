@@ -40,6 +40,7 @@ const NotAllowedRequestByCorsError = require('./corsErrors/notAllowedRequestByCo
 const SubjectNotFoundError = require('./SubjectServiceError/SubjectNotFoundError')
 
 const CourseNotFoundError = require('./CourseServiceErrors/CourseNotFoundError')
+const BatchNotFoundError = require('./BatchServiceErrors/BatchNotFoundError')
 module.exports = {
   UserNotFoundError,
   InvalidUserIdError,
@@ -73,5 +74,6 @@ module.exports = {
   AllowedHeadersNotAnArrayError,
   NotAllowedRequestByCorsError,
   SubjectNotFoundError,
-  CourseNotFoundError
+  CourseNotFoundError,
+  BatchNotFoundError
 };
