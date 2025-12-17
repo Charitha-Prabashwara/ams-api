@@ -29,7 +29,7 @@ describe('Batch service test', () => {
       ub: faker.number.int({ min: 2023, max: 2027 }),
     };
 
-    const batch = await service.createCourse(academic, name);
+    const batch = await service.createBatch(academic, name);
 
     expect(batch).toBeDefined();
     expect(batch).not.toBe(NullBatch);
@@ -44,7 +44,7 @@ describe('Batch service test', () => {
   });
 
   test('should get batch by batch id', async () => {
-    const batch = await service.getCourseById(createdBatch.id);
+    const batch = await service.getBatchById(createdBatch.id);
 
     expect(batch).toBeDefined();
     expect(batch).not.toBe(NullBatch);
@@ -56,7 +56,7 @@ describe('Batch service test', () => {
     const data = { name: createdBatch.name };
     const options = {};
 
-    const batches = await service.getFindCourse(data, options);
+    const batches = await service.getFindBatch(data, options);
 
     batches.forEach(batch => {
       expect(batch).toBeDefined();
@@ -72,7 +72,7 @@ describe('Batch service test', () => {
     const data = { academic: createdBatch.academic };
     const options = {};
 
-    const batches = await service.getFindCourse(data, options);
+    const batches = await service.getFindBatch(data, options);
 
     batches.forEach(batch => {
       expect(batch).toBeDefined();
@@ -92,7 +92,7 @@ describe('Batch service test', () => {
       deleted: false,
     };
 
-    const batch = await service.updateCourseById(data);
+    const batch = await service.updateBatchById(data);
 
     expect(batch).toBeDefined();
     expect(batch).not.toBe(NullBatch);
@@ -102,7 +102,7 @@ describe('Batch service test', () => {
   });
 
   test('should delete batch by batch id', async () => {
-    const batch = await service.deleteCourseById(createdBatch.id);
+    const batch = await service.deleteBatchById(createdBatch.id);
 
     expect(batch).toBeDefined();
     expect(batch).not.toBe(NullBatch);
@@ -110,7 +110,7 @@ describe('Batch service test', () => {
   });
 
   test('should return null object when cant find by id', async () => {
-    const batch = await service.getCourseById(
+    const batch = await service.getBatchById(
       '693c6de4846f017f580afc37'
     );
 
@@ -119,7 +119,7 @@ describe('Batch service test', () => {
   });
 
   test('should return null object when cant update by id', async () => {
-    const batch = await service.updateCourseById({
+    const batch = await service.updateBatchById({
       id: '693c6de4846f017f580afc37',
     });
 
@@ -128,7 +128,7 @@ describe('Batch service test', () => {
   });
 
   test('should return null object when cant delete by id', async () => {
-    const batch = await service.deleteCourseById(
+    const batch = await service.deleteBatchById(
       '693c6de4846f017f580afc37'
     );
 
@@ -137,7 +137,7 @@ describe('Batch service test', () => {
   });
 
   test('should validate null objects using service', async () => {
-    const batch = await service.deleteCourseById(
+    const batch = await service.deleteBatchById(
       '693c6de4846f017f580afc37'
     );
 

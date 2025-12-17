@@ -7,11 +7,11 @@ const batchClass = new Batch()
 class BatchService{
     constructor(){}
 
-    async getCourseById(id, select=[], filter={}) {
+    async getBatchById(id, select=[], filter={}) {
         return batchClass.findById(id, select, filter);
     }
 
-    async getFindCourse(data = {}, options = {}) {
+    async getFindBatch(data = {}, options = {}) {
         const batch = new Batch();
 
         if(data.name) batch.name = data.name;
@@ -23,7 +23,7 @@ class BatchService{
         return batch.find(options);
     }
 
-    async createCourse(academic, name){
+    async createBatch(academic, name){
         const builder = new BatchBuilder();
        
         builder.name = name;
@@ -31,12 +31,12 @@ class BatchService{
         return builder.create()
     }
 
-    async deleteCourseById(id){
+    async deleteBatchById(id){
         return batchClass.deleteById(id);
     }
 
 
-    async updateCourseById(data={}){
+    async updateBatchById(data={}){
         return batchClass.findByIdAndUpdate(data)
     }
 
