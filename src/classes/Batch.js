@@ -71,6 +71,15 @@ class Batch {
     }
   }
 
+   async findByIdAndUpdate(batchObj, select = []) {
+    try {
+      const batch = await repository.save(batchObj, select);
+      return this.#wrapToBatch(batch);
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async find(options={}) {
     try {
       const params = this.#matchFieldsAndParams();
