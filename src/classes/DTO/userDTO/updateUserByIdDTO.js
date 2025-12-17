@@ -10,9 +10,6 @@ class UpdateUserByIdDTO {
         .messages({
           'string.pattern.base': 'id must be a valid id',
         }),
-      type: Joi.string()
-        .valid(...userTypes.USER_TYPES)
-        .required(),
 
       registrationId: Joi.string().max(20).required(),
       firstName: Joi.string()
