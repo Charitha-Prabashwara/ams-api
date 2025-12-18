@@ -1,7 +1,7 @@
 const esbuild = require('esbuild');
 
 const externals = [
-  'faker',
+  '@faker-js/faker',
   'swagger-ui-express',
   'swagger-jsdoc',
   'bcrypt',
