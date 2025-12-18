@@ -16,12 +16,12 @@ const externals = [
   'uuid'
 ];
 
-esbuild.build({
+module.exports = {
   entryPoints: ['src/server.js'],
   bundle: true,
   platform: 'node',
-  target: 'node18', 
-  outfile: 'build/app.js',
+  target: 'node18',
+  outfile: 'dist/app.js',        // <-- this must exist
   minify: true,
   treeShaking: true,
   legalComments: 'none',
@@ -31,4 +31,4 @@ esbuild.build({
   define: {
     'process.env.NODE_ENV': '"production"',
   },
-}).catch(() => process.exit(1));
+};
