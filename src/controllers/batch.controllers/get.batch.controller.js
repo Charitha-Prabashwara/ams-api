@@ -33,7 +33,7 @@ module.exports.getFindBatch = async(dto, req, res, next)=>{
             sort:dto.sort
         }
       
-        console.log(dto);
+     
         
         const batches = await service.getFindBatch(data, options)
         //if(service.isNullBatch(batch)) throw new BatchNotFoundError()
