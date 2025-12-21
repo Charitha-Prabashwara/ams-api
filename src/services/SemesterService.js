@@ -7,6 +7,10 @@ class SemesterService{
 
     constructor(){}
 
+    async getSemesterById(id){
+        return semClass.findById(id, [], {})
+    }
+
     async createNewSemester(data={}){
         const builder = new SemesterBuilder()
         builder.code = data.code;
@@ -36,6 +40,22 @@ class SemesterService{
             if(data.updatedAt_timestamp) semester.updatedAt_timestamp = data.updatedAt_timestamp;
     
             return await semester.find(options)
+    }
+
+    async findOneSemester(data={}, options={}){
+        const semester = new Semester()
+    
+            if(data.name) semester.name = data.name;
+            if(data.code) semester.code = data.code;
+            if(data.department) semester.department = data.department;
+            if(data.course) semester.course = data.course;
+            if(data.batch) semester.batch = data.batch;
+            if(data.isActive != undefined) semester.isActive = data.isActive;
+            if(data.deleted != undefined) semester.deleted = data.deleted;
+            if(data.createdAt_timestamp) semester.createdAt_timestamp = data.createdAt_timestamp;
+            if(data.updatedAt_timestamp) semester.updatedAt_timestamp = data.updatedAt_timestamp;
+    
+            return await semester.findOne(options)
     }
 
     async deleteSemesterById(id){

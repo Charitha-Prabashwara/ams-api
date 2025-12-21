@@ -59,9 +59,6 @@ const SemesterSchema = new mongoose.Schema(
 );
 
 
-SemesterSchema.index(
-  { department: 1, course: 1, batch: 1, code: 1 },
-  { unique: true }
-);
+
 
 module.exports = mongoose.model('Semester', SemesterSchema);

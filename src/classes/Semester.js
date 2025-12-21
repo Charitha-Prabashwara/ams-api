@@ -1,3 +1,4 @@
+const { options } = require('joi');
 const { SemesterRepository } = require('./DATABASE');
 const repository = new SemesterRepository();
 const NullSemester = require('./NullSemester');
@@ -74,6 +75,15 @@ class Semester {
       return this.#wrapToSemester(semester);
     } catch (error) {
       throw error;
+    }
+  }
+
+  async findOne(data={}, options={}){
+    try {
+      const semester = await repository.findOne(data, options)
+      return this.#wrapToSemester(semester)
+    } catch (error) {
+      throw error
     }
   }
 

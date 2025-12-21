@@ -35,12 +35,17 @@ const {GetFindCourseDTO} = require('./courseDTO/getFindCourseDTO')
 const {DeleteCourseByIdDTO} = require('./courseDTO/deleteCourseByIdDTO')
 
 const {CreateSemesterDTO} = require('./semesterDTO/createSemesterDTO')
+const {GetSemesterByIdDTO} = require('./semesterDTO/getSemesterByIdDTO')
+const {GetSemesterByCodeDTO} = require('./semesterDTO/getSemesterByCodeDTO')
 
 const {CreateBatchDTO} = require('./batchDTO/createBatchDTO')
 const {GetBatchByIdDTO} = require('./batchDTO/getBatchByIdDTO')
 const {UpdateBatchByIdDTO} = require('./batchDTO/updateBatchByIdDTO')
 const {GetFindBatchDTO} = require('./batchDTO/getFindBatchDTO')
 const {DeleteBatchByIdDTO} = require('./batchDTO/deleteBatchByIdDTO')
+const {GetFindSemesterDTO} = require('./semesterDTO/getFindSemesterDTO')
+const {UpdateSemesterByIdDTO} = require('./semesterDTO/updateSemesterByIdDTO')
+const {DeleteSemesterByIdDTO} = require('./semesterDTO/deleteSemesterByIdDTO')
 module.exports = {
   CreateUserDTO,
   ErrorResponseDTO,
@@ -70,5 +75,11 @@ module.exports = {
   GetBatchByIdDTO,
   UpdateBatchByIdDTO,
   GetFindBatchDTO,
-  DeleteBatchByIdDTO
+  DeleteBatchByIdDTO,
+  GetSemesterByIdDTO,
+  GetSemesterByCodeDTO,
+  GetFindSemesterDTO,
+  UpdateSemesterByIdDTO,
+  DeleteSemesterByIdDTO
+  
 };
