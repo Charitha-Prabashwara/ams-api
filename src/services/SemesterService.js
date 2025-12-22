@@ -7,8 +7,8 @@ class SemesterService{
 
     constructor(){}
 
-    async getSemesterById(id){
-        return semClass.findById(id, [], {})
+    async getSemesterById(id ,select=[], filter={}){
+        return semClass.findById(id, select, filter)
     }
 
     async createNewSemester(data={}){
