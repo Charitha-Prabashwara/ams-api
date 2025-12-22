@@ -28,8 +28,8 @@ class Student extends User {
     return Student._wrapToStudent(user);
   }
 
-  async findById(id) {
-    const user = await super.findById(id);
+  async findById(id, select=[], filter={}) {
+    const user = await super.findById(id, select, filter);
     return Student._wrapToStudent(user);
   }
 

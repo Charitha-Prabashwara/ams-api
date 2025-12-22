@@ -141,9 +141,9 @@ class User {
    * @returns {Promise<User>} The found User instance.
    * @throws Will throw an error if the user is not found or DB error occurs.
    */
-  async findById(user_id) {
+  async findById(user_id, select=[], filter={}) {
     try {
-      const user = await repository.findById(user_id);
+      const user = await repository.findById(user_id, select, filter);
       return this.#wrapToUser(user);
     } catch (error) {
       throw error;

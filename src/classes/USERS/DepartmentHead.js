@@ -27,8 +27,8 @@ class DepartmentHead extends User {
     return DepartmentHead._wrapToDepartmentHead(user);
   }
 
-  async findById(id) {
-    const user = await super.findById(id);
+  async findById(id, select=[], filter={}) {
+    const user = await super.findById(id, select, filter);
     return DepartmentHead._wrapToDepartmentHead(user);
   }
 

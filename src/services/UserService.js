@@ -24,9 +24,9 @@ class UserService {
    * @param {string} id - The unique ID of the user.
    * @returns {Promise<Object|null>} The user object if found, otherwise null.
    */
-  async getUserById(userType, id) {
+  async getUserById(userType, id, select=[], filter={}) {
     const userClass = selectCorrectUser(userType);
-    return await userClass.findById(id);
+    return await userClass.findById(id, select, filter);
   }
 
   /**

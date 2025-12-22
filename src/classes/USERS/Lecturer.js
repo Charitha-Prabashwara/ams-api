@@ -27,8 +27,8 @@ class Lecturer extends User {
     return Lecturer._wrapToLecturer(user);
   }
 
-  async findById(id) {
-    const user = await super.findById(id);
+  async findById(id, select=[], filter={}) {
+    const user = await super.findById(id, select, filter);
     return Lecturer._wrapToLecturer(user);
   }
 
