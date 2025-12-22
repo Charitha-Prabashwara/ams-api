@@ -17,6 +17,11 @@ const subjectSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    isActive:{
+      type: Boolean,
+      required: false,
+      default: true,
+    },
     deleted: {
       type: Boolean,
       required: false,

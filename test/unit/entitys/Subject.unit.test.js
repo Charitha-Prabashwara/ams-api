@@ -71,18 +71,21 @@ describe('Subject Class Tests', () => {
     const updatedData = {
       name: faker.person.jobTitle(),
       code: faker.string.alphanumeric(5).toUpperCase(),
+      isActive:false,
       credits: 4,
     };
 
     subject.name = updatedData.name;
     subject.code = updatedData.code;
     subject.credits = updatedData.credits;
+    subject.isActive = updatedData.isActive;
 
     const updated = await subject.save();
     expect(updated).toBeInstanceOf(Subject);
     expect(updated.name).toBe(updatedData.name);
     expect(updated.code).toBe(updatedData.code);
     expect(updated.credits).toBe(updatedData.credits);
+    expect(updated.isActive).toBe(updatedData.isActive)
   });
 
   test('Should find not deleted Subjects', async () => {

@@ -57,13 +57,15 @@ describe('Subject service test', () => {
     name = faker.word.noun();
     code = faker.word.adjective();
     credits = faker.number.int({ min: 1, max: 2 });
+    const isActive = false
 
-    const subject = await service.updateSubjectById({id: Csubject.id, name:name, code:code, credits:credits})
+    const subject = await service.updateSubjectById({id: Csubject.id, name:name, code:code, credits:credits, isActive: isActive})
     expect(subject).toBeDefined()
     expect(subject).not.toBe(NullSubject)
     expect(subject.name).toBe(name)
     expect(subject.code).toBe(code)
     expect(subject.credits).toBe(credits)
+    expect(subject.isActive).toBe(isActive)
   })
 
   test('should update deleted state of the subject', async () => {

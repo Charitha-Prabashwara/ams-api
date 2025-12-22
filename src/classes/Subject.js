@@ -6,6 +6,7 @@ class Subject {
   name;
   code;
   credits;
+  isActive;
   deleted;
   createdAt_timestamp;
   updatedAt_timestamp;
@@ -15,6 +16,7 @@ class Subject {
     this.name = data.name;
     this.code = data.code;
     this.credits = data.credits;
+    this.isActive = data.isActive;
     this.deleted = data.deleted;
     this.createdAt = data.createdAt_timestamp;
     this.updatedAt = data.updatedAt_timestamp;
@@ -27,6 +29,7 @@ class Subject {
       'name',
       'code',
       'credits',
+      'isActive',
       'deleted',
       'createdAt_timestamp',
       'updatedAt_timestamp',

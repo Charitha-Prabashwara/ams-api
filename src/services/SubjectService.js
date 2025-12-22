@@ -31,6 +31,7 @@ class SubjectService{
      * @param {String} [filter.name] - Filter by name.
      * @param {String} [filter.code] - Filter by code.
      * @param {Number} [filter.credits] - Filter by credit value.
+     * @param {Boolean} [filter.isActive] - Filter by active status.
      * @param {Boolean} [filter.deleted] - Filter by deleted status.
      * @param {Number} [filter.createdAt_timestamp] - Filter by creation timestamp.
      * @param {Number} [filter.updatedAt_timestamp] - Filter by update timestamp.
@@ -68,6 +69,7 @@ class SubjectService{
  * @param {String} [data.name] - New subject name.
  * @param {String} [data.code] - New subject code.
  * @param {Number} [data.credits] - New credit value.
+ * @param {Boolean} [data.isActive] - Update active status.
  * @param {Boolean} [data.deleted] - Update deleted status.
  * @param {Number} [data.createdAt_timestamp] - Override created timestamp (not recommended).
  * @param {Number} [data.updatedAt_timestamp] - Override updated timestamp.
@@ -88,6 +90,7 @@ class SubjectService{
      * @param {String} [data.name] - Filter by name.
      * @param {String} [data.code] - Filter by code.
      * @param {Number} [data.credits] - Filter by credit value.
+     * @param {Boolean} [data.isActive] - Filter by active status.
      * @param {Boolean} [data.deleted] - Filter by deleted status.
      * @param {Number} [data.createdAt_timestamp] - Filter by creation timestamp.
      * @param {Number} [data.updatedAt_timestamp] - Filter by update timestamp.
@@ -100,6 +103,7 @@ class SubjectService{
         if(data.name) subjectClass.name = data.name;
         if(data.code) subjectClass.code = data.code;
         if(data.credits) subjectClass.credits = data.credits;
+        if(data.isActive != undefined) subjectClass.isActive =data.isActive;
         if(data.deleted != undefined) subjectClass.deleted = data.deleted;
         if(data.createdAt_timestamp) subjectClass.createdAt_timestamp = data.createdAt_timestamp;
         if(data.updatedAt_timestamp) subjectClass.updatedAt_timestamp = data.updatedAt_timestamp;
