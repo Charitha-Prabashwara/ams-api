@@ -113,6 +113,7 @@ test('Should update student data successfully', async () => {
   user.name = new_name;
   user.email = new_email;
   user.password = await PasswordHashService.hashPassword(new_password);
+  user.deleted = true
 
   await user.save();
 
@@ -129,6 +130,7 @@ test('Should update student data successfully', async () => {
     updated.password,
   );
   expect(compare).toBe(true);
+  expect(updated.deleted).toBe(true)
 });
 
 test('Should delete student by email (deleteOne)', async () => {

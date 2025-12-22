@@ -89,6 +89,7 @@ class UserService {
 
     if (data.last_login) userClass.last_login = data.last_login;
     if (data.enable_state) userClass.enable_state = data.enable_state;
+    if(data.deleted) userClass.deleted = data.deleted;
     if (data.createdAt_timestamp)
       userClass.createdAt_timestamp = data.createdAt_timestamp;
     if (data.updatedAt_timestamp)

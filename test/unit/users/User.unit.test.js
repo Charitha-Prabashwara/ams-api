@@ -111,6 +111,7 @@ describe('Test User class', () => {
     user.name = new_name;
     user.email = new_email;
     user.password = new_password;
+    user.deleted = true
 
     await user.save();
 
@@ -120,6 +121,7 @@ describe('Test User class', () => {
     expect(new_name).toStrictEqual(users[0].name);
     expect(new_email).toBe(users[0].email);
     expect(new_password).toBe(users[0].password);
+    expect(true).toBe(users[0].deleted)
   });
 
   test('Delete User', async () => {
