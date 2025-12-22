@@ -15,9 +15,11 @@ class BatchService{
         const batch = new Batch();
 
         if(data.name) batch.name = data.name;
-        
+        if(data.academic){
             if(data.academic.lb !=undefined) batch['academic.lb'] = data.academic.lb;
             if(data.academic.ub !=undefined) batch['academic.ub'] = data.academic.ub;
+        }
+            
         
         if(data.deleted != undefined) batch.deleted = data.deleted;
         if(data.createdAt_timestamp) batch.createdAt_timestamp = data.createdAt_timestamp;
