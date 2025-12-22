@@ -27,6 +27,8 @@ class User {
   last_login;
   /** @type {boolean} */
   enable_state;
+  /** @type {boolean} */
+  deleted
   /** @type {Date} */
   createdAt_timestamp;
   /** @type {Date} */
@@ -52,6 +54,7 @@ class User {
     this.refresh_token = data.refresh_token;
     this.last_login = data.last_login;
     this.enable_state = data.enable_state;
+    this.deleted = data.deleted;
     this._department = data.department;
     this._type = data.type;
 
@@ -77,6 +80,7 @@ class User {
       'refresh_token',
       'last_login',
       'enable_state',
+      'deleted',
       '_type',
       'createdAt_timestamp',
       'updatedAt_timestamp',
