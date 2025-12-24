@@ -42,6 +42,7 @@ const SubjectNotFoundError = require('./SubjectServiceError/SubjectNotFoundError
 const CourseNotFoundError = require('./CourseServiceErrors/CourseNotFoundError')
 const BatchNotFoundError = require('./BatchServiceErrors/BatchNotFoundError')
 const SemesterNotFoundError = require('./SemesterServiceErrors/SemesterNotFoundError')
+const SubjectRegistrationNotFoundError = require('./SubjectRegistrationServiceErrors/SubjectRegistrationNotFoundError')
 module.exports = {
   UserNotFoundError,
   InvalidUserIdError,
@@ -77,5 +78,6 @@ module.exports = {
   SubjectNotFoundError,
   CourseNotFoundError,
   BatchNotFoundError,
-  SemesterNotFoundError
+  SemesterNotFoundError,
+  SubjectRegistrationNotFoundError
 };
