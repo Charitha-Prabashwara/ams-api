@@ -1,4 +1,5 @@
 const Joi = require('joi');
+Joi.objectId = require('joi-objectid')(Joi);
 const { ValidationFailedError } = require('../../../errors');
 const { userTypes } = require('../../../config');
 
@@ -39,7 +40,7 @@ class GetUserFindDTO {
         .valid(...userTypes.USER_TYPES)
         .required(),
 
-      departmentId: Joi.string(),
+      departmentId: Joi.objectId(),
       lastLogin: Joi.date(),
       enableState: Joi.boolean(),
       createdAt: Joi.date(),

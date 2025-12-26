@@ -1,16 +1,12 @@
 const Joi = require('joi');
+Joi.objectId = require('joi-objectid')(Joi);
 const { ValidationFailedError } = require('../../../errors');
 const { userTypes } = require('../../../config');
 
 class GetUserByIdDTO {
   constructor(data) {
     const schema = Joi.object({
-      id: Joi.string()
-        .pattern(/^[0-9a-fA-F]{24}$/)
-        .required()
-        .messages({
-          'string.pattern.base': 'id must be a valid id',
-        }),
+      id: Joi.objectId().required(),
       type: Joi.string()
         .valid(...userTypes.USER_TYPES)
         .required(),
