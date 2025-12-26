@@ -5,4 +5,7 @@ const SubjectModel = require('./subject.model');
 const CourseModel = require('./course.model')
 const SemesterModel = require('./semester.model')
 const SubjectRegistrationModel = require('./subject.registration.model')
-module.exports = { UserModel, DepartmentModel, BatchModel, SubjectModel, CourseModel, SemesterModel, SubjectRegistrationModel};
+const LecturerSubjectRegistrationModel = require('./lecturer.subject.registration.model')
+module.exports = { UserModel, DepartmentModel, BatchModel, SubjectModel, CourseModel, SemesterModel, SubjectRegistrationModel,
+    LecturerSubjectRegistrationModel
+};

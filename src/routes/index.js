@@ -6,6 +6,16 @@ const corseRouter = require('./course.routes/course.routes')
 const semesterRouter = require('./semester.routes/semester.routes')
 const batchRouter = require('./batch.routes/batch.routes')
 const subjectRegistrationRouter = require('./subjectRegistration.routes/subjectRegistration.routes')
-module.exports = { base_router, adminRouter, departmentRouter, subjectRouter, corseRouter, semesterRouter, batchRouter,
-    subjectRegistrationRouter
+const lecturerSubjectRegistrationRouter = require('./lecturerSubjectRegistration.routes/lecturerSubjectRegistration.routes')
+
+module.exports = { 
+    base_router, 
+    adminRouter, 
+    departmentRouter, 
+    subjectRouter, 
+    corseRouter, 
+    semesterRouter, 
+    batchRouter,
+    subjectRegistrationRouter,
+    lecturerSubjectRegistrationRouter
 };

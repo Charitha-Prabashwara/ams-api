@@ -5,6 +5,7 @@ const SubjectRepository = require('./SubjectRepository');
 const CourseRepository = require('./CourseRepository')
 const SemesterRepository = require('./SemesterRepository')
 const SubjectRegistrationRepository = require('./SubjectRegistrationRepository')
+const LecturerSubjectRegistrationRepository = require('./LecturerSubjectRegistrationRepository')
 module.exports = {
   UserRepository,
   DepartmentRepository,
@@ -12,5 +13,6 @@ module.exports = {
   SubjectRepository,
   CourseRepository,
   SemesterRepository,
-  SubjectRegistrationRepository
+  SubjectRegistrationRepository,
+  LecturerSubjectRegistrationRepository
 };

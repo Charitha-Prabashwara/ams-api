@@ -42,8 +42,16 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 
-const { base_router, adminRouter, departmentRouter, subjectRouter, corseRouter, semesterRouter, batchRouter,
-  subjectRegistrationRouter
+const { 
+  base_router, 
+  adminRouter, 
+  departmentRouter, 
+  subjectRouter, 
+  corseRouter, 
+  semesterRouter, 
+  batchRouter,
+  subjectRegistrationRouter, 
+  lecturerSubjectRegistrationRouter
 } = require('./routes');
 
 app.use('/api/v1/', base_router);
@@ -54,6 +62,7 @@ app.use('/api/v1/course', corseRouter)
 app.use('/api/v1/semester', semesterRouter)
 app.use('/api/v1/batch', batchRouter)
 app.use('/api/v1/subjectRegistration', subjectRegistrationRouter)
+app.use('/api/v1/lectSubReg', lecturerSubjectRegistrationRouter)
 
 app.use(ErrorTranslator);
 app.use(ErrorHandler);
