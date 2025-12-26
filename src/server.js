@@ -1,10 +1,9 @@
 const app = require('./app');
 const { config } = require('./config');
-const { DB_connect } = require('./database/db');
-
+const connectDatabase = require('./database/connection');
 
 try {
-  DB_connect();
+  connectDatabase();
   app.listen(config.APPLICATION_PORT, () => {
     console.log(`Server is listening on port: ${config.APPLICATION_PORT}`);
   });
