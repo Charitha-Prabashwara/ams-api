@@ -1,25 +1,14 @@
 const Joi = require('joi');
+Joi.objectId = require('joi-objectid')(Joi);
 const { ValidationFailedError } = require('../../../errors');
 class GetFindSemesterDTO {
   constructor(data) {
     const schema = Joi.object({
      code:Joi.string().max(20),
      name:Joi.string().max(100),
-     department:Joi.string()
-             .pattern(/^[0-9a-fA-F]{24}$/)
-             .messages({
-               'string.pattern.base': 'id must be a valid id',
-             }),
-     course:Joi.string()
-             .pattern(/^[0-9a-fA-F]{24}$/)
-             .messages({
-               'string.pattern.base': 'id must be a valid id',
-             }),
-    batch:Joi.string()
-             .pattern(/^[0-9a-fA-F]{24}$/)
-             .messages({
-               'string.pattern.base': 'id must be a valid id',
-             }),
+     department:Joi.objectId(),
+     course:Joi.objectId(),
+    batch:Joi.objectId(),
     isActive:Joi.boolean(),
     deleted:Joi.boolean(),
 

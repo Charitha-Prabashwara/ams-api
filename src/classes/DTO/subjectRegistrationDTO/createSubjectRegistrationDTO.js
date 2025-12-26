@@ -1,29 +1,15 @@
 const Joi = require('joi');
+Joi.objectId = require('joi-objectid')(Joi);
 const { ValidationFailedError } = require('../../../errors');
 
 class CreateSubjectRegistrationDTO {
   constructor(data) {
     const schema = Joi.object({
-     student: Joi.string()
-                  .pattern(/^[0-9a-fA-F]{24}$/)
-                  .required()
-                  .messages({
-                    'string.pattern.base': 'id must be a valid id',
-                  }),
+     student: Joi.objectId().required(),
 
-     semester: Joi.string()
-                  .pattern(/^[0-9a-fA-F]{24}$/)
-                  .required()
-                  .messages({
-                    'string.pattern.base': 'id must be a valid id',
-                  }),
+     semester: Joi.objectId().required(),
 
-     subject: Joi.string()
-                  .pattern(/^[0-9a-fA-F]{24}$/)
-                  .required()
-                  .messages({
-                    'string.pattern.base': 'id must be a valid id',
-                  }),
+     subject: Joi.objectId().required(),
     });
 
     const { error, value } = schema.validate(data, { abortEarly: false });

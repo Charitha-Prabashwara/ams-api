@@ -49,7 +49,7 @@ class CreateUserDTO {
         .messages({
           'any.only': 'Confirm password must match password',
         }),
-      departmentId: Joi.string(),
+      departmentId: Joi.objectId().required(),
     });
 
     const { error, value } = schema.validate(data, { abortEarly: false });

@@ -1,14 +1,10 @@
 const Joi = require('joi');
+Joi.objectId = require('joi-objectid')(Joi);
 const { ValidationFailedError } = require('../../../errors');
 class UpdateDepartmentByIdDTO {
   constructor(data) {
     const schema = Joi.object({
-      id: Joi.string()
-        .pattern(/^[0-9a-fA-F]{24}$/)
-        .required()
-        .messages({
-          'string.pattern.base': 'id must be a valid id',
-        }),
+      id: Joi.objectId().required(),
       longName: Joi.string().max(100),
       shortName: Joi.string().max(20),
       keyName: Joi.string().max(10),

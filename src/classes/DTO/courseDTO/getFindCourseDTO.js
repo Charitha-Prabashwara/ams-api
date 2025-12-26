@@ -6,11 +6,7 @@ class GetFindCourseDTO {
     
       code: Joi.string(),
       name: Joi.string(),
-      department: Joi.string()
-              .pattern(/^[0-9a-fA-F]{24}$/)
-              .messages({
-                'string.pattern.base': 'id must be a valid id',
-              }),
+      department: Joi.objectId(),
       isActive: Joi.boolean(),
       deleted: Joi.boolean(),
 
