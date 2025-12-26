@@ -1,4 +1,4 @@
-const morgan = require('morgan');
+const morgan = require('./log/morgan');
 const cookieParser = require('cookie-parser');
 const compression = require('compression');
 const express = require('express');
@@ -11,7 +11,7 @@ const swagger = require('../src/docs/swagger')
 
 app.use(compression({threshold: 1024}));
 app.use(corsMiddleware);
-app.use(morgan('tiny'));
+morgan(app);
 app.use(cookieParser());
 app.use(express.json({ limit: '10mb' }));
 
