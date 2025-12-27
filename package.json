@@ -64,7 +64,10 @@
     "pkg": "^5.8.1",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
-    "uuid": "^11.1.0"
+    "ua-parser-js": "^2.0.7",
+    "uuid": "^11.1.0",
+    "winston": "^3.19.0",
+    "winston-daily-rotate-file": "^5.0.0"
   },
   "devDependencies": {
     "esbuild": "^0.27.2",
