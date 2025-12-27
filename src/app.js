@@ -8,10 +8,14 @@ const { ErrorTranslator, ErrorHandler } = require('./middleware');
 const corsMiddleware = require('./cors/cors')
 const routes = require('./routes')
 const swagger = require('../src/middleware/swagger')
-
+const requestTiming = require('./middleware/requestTiming')
+const morganRaw = require('./middleware/morganRaw')
+app.set('trust proxy', true);
+app.use(requestTiming)
 app.use(compression({threshold: 1024}));
 app.use(corsMiddleware);
-morgan(app);
+app.use(morganRaw)
+//morgan(app);
 app.use(cookieParser());
 app.use(express.json({ limit: '10mb' }));
 
