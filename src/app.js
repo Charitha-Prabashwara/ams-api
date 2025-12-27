@@ -1,4 +1,4 @@
-const morgan = require('./log/morgan');
+const morgan = require('./middleware/morgan');
 const cookieParser = require('cookie-parser');
 const compression = require('compression');
 const express = require('express');
@@ -7,7 +7,7 @@ const app = express();
 const { ErrorTranslator, ErrorHandler } = require('./middleware');
 const corsMiddleware = require('./cors/cors')
 const routes = require('./routes')
-const swagger = require('../src/docs/swagger')
+const swagger = require('../src/middleware/swagger')
 
 app.use(compression({threshold: 1024}));
 app.use(corsMiddleware);
