@@ -15,7 +15,7 @@ class Strings {
   }
 
   loadAllLanguages() {
-    const dir = path.join(process.cwd(), 'src/lang');
+    const dir = path.join(process.cwd(), '/lang');
 
     if (!fs.existsSync(dir)) {
       console.error(`[Strings] Language directory not found: ${dir}`);
