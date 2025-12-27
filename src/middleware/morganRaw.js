@@ -5,13 +5,8 @@ const logger = require('../logger/winston');
 // Custom tokens
 morgan.token('timestamp', () => new Date().toISOString());
 
-morgan.token('wait-time', (req) => {
-  if (!req._hrStart) return 0;
-  const diff = process.hrtime(req._hrStart);
-  return Number((diff[0] * 1e3 + diff[1] * 1e-6).toFixed(3));
-});
+morgan.token('wait-time', (req) => req._waitTimeMs || 0);
 
-morgan.token('response-time-ms', (req) => req._responseTimeMs || 0);
 morgan.token('route', (req) => req.originalUrl);
 morgan.token('ip', (req) => req.ip);
 
@@ -29,8 +24,7 @@ module.exports = morgan((tokens, req, res) => {
     request_ip: tokens.ip(req, res),
     user_agent: tokens['user-agent'](req, res),
     requester_os: tokens.os(req, res),
-    wait_time_ms: tokens['wait-time'](req, res),
-    response_time_ms: tokens['response-time-ms'](req, res)
+    wait_time_ms: tokens['wait-time'](req, res)
   });
 }, {
   stream: {
