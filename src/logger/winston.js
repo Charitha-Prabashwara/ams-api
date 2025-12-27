@@ -19,7 +19,7 @@ const logger = winston.createLogger({
   format: logFormat,
   transports: [
     transport,
-    new winston.transports.Console() // remove in production if needed
+    //new winston.transports.Console() // remove in production if needed
   ]
 });
 
