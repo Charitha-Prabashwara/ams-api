@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const autopopulate = require('mongoose-autopopulate');
 const SemesterSchema = new mongoose.Schema(
   {
     code: {
@@ -20,21 +20,24 @@ const SemesterSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Department',
       required: true,
-      index: true
+      index: true,
+      autopopulate:true
     },
 
     course: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Course',
       required: true,
-      index: true
+      index: true,
+      autopopulate:true
     },
 
     batch: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Batch',
       required: true,
-      index: true
+      index: true,
+      autopopulate:true
     },
 
     isActive: {
@@ -58,7 +61,7 @@ const SemesterSchema = new mongoose.Schema(
   }
 );
 
-
+SemesterSchema.plugin(autopopulate);
 
 
 module.exports = mongoose.model('Semester', SemesterSchema);

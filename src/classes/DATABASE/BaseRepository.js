@@ -49,13 +49,22 @@ class BaseRepository {
   }
 
   async find(filter = {}, options = {}) {
-    const { limit = null, skip = 0, select = null, sort = null } = options;
-    let query = this.model.find(filter).skip(skip);
-    if (limit) query = query.limit(limit);
-    if (select) query = query.select(this._selectProjection(select));
-    if (sort) query = query.sort(sort);
-    return await query.lean();
-  }
+  const { limit = null, skip = 0, select = null, sort = null } = options;
+
+  let query = this.model.find(filter).skip(skip);
+
+  if (limit) query = query.limit(limit);
+  if (select) query = query.select(this._selectProjection(select));
+  if (sort) query = query.sort(sort);
+
+  this.model.schema.eachPath((path, schemaType) => {
+    if (schemaType.options?.ref) {
+      query.populate(path);
+    }
+  });
+
+  return await query.lean();
+}
 
   async findOne(filter = {}, options = {}) {
     const { limit = null, skip = 0, select = [], sort = null } = options;
