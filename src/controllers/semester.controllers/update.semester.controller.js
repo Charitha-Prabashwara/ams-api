@@ -42,7 +42,7 @@ module.exports.updateSemesterById = async(dto, req, res, next)=>{
         department:dto.department,
         course:dto.course,
         batch:dto.batch,
-        active:dto.isActive,
+        isActive:dto.isActive,
         deleted:dto.deleted,
         }
 
