@@ -9,6 +9,6 @@ const corseRouter = express.Router();
 corseRouter.post('/', withDTO(CreateCourseDTO, createCourse))
 corseRouter.put('/id/', withDTO(UpdateCourseByIdDTO, updateCourseById))
 corseRouter.get('/id/', withDTO(GetCourseByIdDTO, getCourseById))
-corseRouter.get('/find/', withDTO(GetFindCourseDTO, getFindCourse))
+corseRouter.post('/find/', withDTO(GetFindCourseDTO, getFindCourse))
 corseRouter.delete('/id/', withDTO(DeleteCourseByIdDTO, deleteCourseById))
 module.exports = corseRouter;
