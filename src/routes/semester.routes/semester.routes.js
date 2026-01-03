@@ -10,7 +10,7 @@ const semesterRouter = express.Router();
 semesterRouter.post('/', withDTO(CreateSemesterDTO, createSemester))
 semesterRouter.get('/id/', withDTO(GetSemesterByIdDTO, getSemesterById))
 semesterRouter.get('/code/', withDTO(GetSemesterByCodeDTO, getSemesterByCode))
-semesterRouter.get('/find/', withDTO(GetFindSemesterDTO, getFindSemester))
+semesterRouter.post('/find/', withDTO(GetFindSemesterDTO, getFindSemester))
 semesterRouter.put('/id/', withDTO(UpdateSemesterByIdDTO, updateSemesterById))
 semesterRouter.delete('/id/', withDTO(DeleteSemesterByIdDTO, deleteSemesterById))
 module.exports = semesterRouter;

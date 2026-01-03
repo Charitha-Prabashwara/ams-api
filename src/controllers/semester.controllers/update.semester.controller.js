@@ -31,8 +31,9 @@ module.exports.updateSemesterById = async(dto, req, res, next)=>{
             if(batchService.isNullBatch(batch)) throw new BatchNotFoundError()
         }
 
-        if(course.department != department.id){
-            throw new Error("Your selected department" + department.name.short + "is not belongs to course: " + course.name)
+
+        if(!(course.department.equals(department.id))){
+            throw new Error("Your selected department" + department.name.short + " is not belongs to course: " + course.name)
         }
         
         const data={

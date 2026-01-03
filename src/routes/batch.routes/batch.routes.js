@@ -10,6 +10,6 @@ batchRouter.post('/', withDTO(CreateBatchDTO, createBatch))
 batchRouter.get('/id/', withDTO(GetBatchByIdDTO, getBatchById))
 batchRouter.put('/id/', withDTO(UpdateBatchByIdDTO, updateBatchById))
 batchRouter.delete('/id/', withDTO(DeleteBatchByIdDTO, deleteBatchById))
-batchRouter.get('/find/', withDTO(GetFindBatchDTO, getFindBatch))
+batchRouter.post('/find/', withDTO(GetFindBatchDTO, getFindBatch))
 
 module.exports = batchRouter;

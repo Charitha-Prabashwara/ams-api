@@ -26,7 +26,7 @@ const departmentRouter = express.Router();
 
 departmentRouter.post('/', withDTO(CreateDepartmentDTO, createDepartment));
 departmentRouter.get('/id/', withDTO(GetDepartmentByIdDTO, getDepartmentById));
-departmentRouter.get('/find/', withDTO(GetFindDepartmentDTO, findDepartment));
+departmentRouter.post('/find/', withDTO(GetFindDepartmentDTO, findDepartment));
 departmentRouter.put(
   '/id/',
   withDTO(UpdateDepartmentByIdDTO, updateDepartmentById),
