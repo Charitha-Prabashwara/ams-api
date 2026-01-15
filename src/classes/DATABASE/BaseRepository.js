@@ -110,19 +110,20 @@ class BaseRepository {
 
   /* -------------------- WRITES -------------------- */
 
-  async create(data) {
-    const created = (await this.model.create(data)).toObject();
+ async create(data) {
+  const created = (await this.model.create(data)).toObject();
 
-    // Cache for findById immediately
-    const select = this.#selectList;
-    const key = this.#getCacheKey('findById', { id: created._id.toString(), select });
-    this.#cache.set(key, created);
+  const select = this.#selectList;
+  const key = this.#getCacheKey('findById', {
+    id: created._id.toString(),
+    select
+  });
 
-    // Clear other list caches
-    this.#deleteListCaches();
+  this.#cache.set(key, created);
+  this.#deleteListCaches();
 
-    return created;
-  }
+  return created;
+}
 
   async save(entity, select = []) {
     const id = entity._id || entity.id;
