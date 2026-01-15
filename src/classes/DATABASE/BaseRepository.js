@@ -10,10 +10,8 @@ class BaseRepository {
   constructor(model, select = [], cacheOptions = { max: 40000, ttl: 1000 * 60 * 60 }) {
     this.model = model;
     this.#selectList = select;
-    this.#cache = new LRU(cacheOptions); // LRU v7+
+    this.#cache = new LRU(cacheOptions);
   }
-
-  /* -------------------- helpers -------------------- */
 
   _validateId(id) {
     if (!mongoose.isValidObjectId(id)) {
@@ -42,7 +40,22 @@ class BaseRepository {
     }
   }
 
-  /* -------------------- READS (cached) -------------------- */
+  async #withTransaction(fn) {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
+    try {
+      const result = await fn(session);
+      await session.commitTransaction();
+      return result;
+    } catch (err) {
+      await session.abortTransaction();
+      throw err;
+    } finally {
+      session.endSession();
+    }
+  }
+
 
   async findById(id, select = []) {
     this._validateId(id);
@@ -55,10 +68,10 @@ class BaseRepository {
     let query = this.model.findById(idString);
     const projection = this._selectProjection(select);
     if (projection) query = query.select(projection);
-    query = query.lean();
 
-    const result = await query;
+    const result = await query.lean();
     this.#cache.set(key, result || null);
+
     return result || null;
   }
 
@@ -76,15 +89,13 @@ class BaseRepository {
     const projection = this._selectProjection(select || []);
     if (projection) query = query.select(projection);
 
-    // Auto-populate references
     this.model.schema.eachPath((path, schemaType) => {
       if (schemaType.options?.ref) query.populate(path);
     });
 
-    query = query.lean();
-
-    const result = await query;
+    const result = await query.lean();
     this.#cache.set(key, result || []);
+
     return result || [];
   }
 
@@ -101,107 +112,134 @@ class BaseRepository {
     const projection = this._selectProjection(select);
     if (projection) query = query.select(projection);
 
-    query = query.lean();
-
-    const result = await query;
+    const result = await query.lean();
     this.#cache.set(key, result || null);
+
     return result || null;
   }
 
-  /* -------------------- WRITES -------------------- */
+  async create(data) {
+    return this.#withTransaction(async (session) => {
+      const created = (
+        await this.model.create([data], { session })
+      )[0].toObject();
 
- async create(data) {
-  const created = (await this.model.create(data)).toObject();
+      const key = this.#getCacheKey('findById', {
+        id: created._id.toString(),
+        select: this.#selectList
+      });
 
-  const select = this.#selectList;
-  const key = this.#getCacheKey('findById', {
-    id: created._id.toString(),
-    select
-  });
+      this.#cache.set(key, created);
+      this.#deleteListCaches();
 
-  this.#cache.set(key, created);
-  this.#deleteListCaches();
-
-  return created;
-}
+      return created;
+    });
+  }
 
   async save(entity, select = []) {
     const id = entity._id || entity.id;
     this._validateId(id);
     const idString = id.toString();
 
-    let query = this.model.findByIdAndUpdate(idString, entity, { new: true });
-    const projection = this._selectProjection(select);
-    if (projection) query = query.select(projection);
+    return this.#withTransaction(async (session) => {
+      let query = this.model.findByIdAndUpdate(
+        idString,
+        entity,
+        { new: true, session }
+      );
 
-    query = query.lean();
-    const updated = await query;
+      const projection = this._selectProjection(select);
+      if (projection) query = query.select(projection);
 
-    // Update cache for this ID
-    const key = this.#getCacheKey('findById', { id: idString, select: this.#selectList });
-    this.#cache.set(key, updated || null);
+      const updated = await query.lean();
 
-    // Clear list caches
-    this.#deleteListCaches();
+      const key = this.#getCacheKey('findById', {
+        id: idString,
+        select: this.#selectList
+      });
 
-    return updated || null;
+      this.#cache.set(key, updated || null);
+      this.#deleteListCaches();
+
+      return updated || null;
+    });
   }
 
   async directUpdate(id, fields, select = []) {
     this._validateId(id);
     const idString = id.toString();
 
-    let query = this.model.findByIdAndUpdate(idString, fields, { new: true });
-    const projection = this._selectProjection(select);
-    if (projection) query = query.select(projection);
+    return this.#withTransaction(async (session) => {
+      let query = this.model.findByIdAndUpdate(
+        idString,
+        fields,
+        { new: true, session }
+      );
 
-    query = query.lean();
-    const updated = await query;
+      const projection = this._selectProjection(select);
+      if (projection) query = query.select(projection);
 
-    // Update cache for this ID
-    const key = this.#getCacheKey('findById', { id: idString, select: this.#selectList });
-    this.#cache.set(key, updated || null);
+      const updated = await query.lean();
 
-    // Clear list caches
-    this.#deleteListCaches();
+      const key = this.#getCacheKey('findById', {
+        id: idString,
+        select: this.#selectList
+      });
 
-    return updated || null;
+      this.#cache.set(key, updated || null);
+      this.#deleteListCaches();
+
+      return updated || null;
+    });
   }
 
   async deleteOne(filter) {
-    const deleted = await this.model.findOneAndDelete(filter);
+    return this.#withTransaction(async (session) => {
+      const deleted = await this.model
+        .findOneAndDelete(filter)
+        .session(session);
 
-    if (!deleted) return null;
+      if (!deleted) return null;
 
-    const idString = deleted._id.toString();
-    const key = this.#getCacheKey('findById', { id: idString, select: this.#selectList });
-    this.#cache.set(key, null);
+      const key = this.#getCacheKey('findById', {
+        id: deleted._id.toString(),
+        select: this.#selectList
+      });
 
-    this.#deleteListCaches();
+      this.#cache.set(key, null);
+      this.#deleteListCaches();
 
-    return deleted || null;
+      return deleted;
+    });
   }
 
   async deleteMany(filter) {
-    await this.model.deleteMany(filter);
-
-    this.#invalidateCache(); // clear everything
-
-    return null;
+    return this.#withTransaction(async (session) => {
+      await this.model.deleteMany(filter).session(session);
+      this.#invalidateCache();
+      return null;
+    });
   }
 
-   async deleteById(id) {
+  async deleteById(id) {
     this._validateId(id);
     const idString = id.toString();
 
-    const deleted = await this.model.findByIdAndDelete(idString);
+    return this.#withTransaction(async (session) => {
+      const deleted = await this.model
+        .findByIdAndDelete(idString)
+        .session(session);
 
-    const key = this.#getCacheKey('findById', { id: idString, select: this.#selectList });
-    this.#cache.set(key, null);
+      const key = this.#getCacheKey('findById', {
+        id: idString,
+        select: this.#selectList
+      });
 
-    this.#deleteListCaches();
+      this.#cache.set(key, null);
+      this.#deleteListCaches();
 
-    return deleted || null;
+      return deleted || null;
+    });
   }
 }
 
