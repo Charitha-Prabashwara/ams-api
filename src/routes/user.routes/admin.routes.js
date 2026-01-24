@@ -36,5 +36,5 @@ adminRouter.get('/email/', withDTO(getUserByEmailDTO, getUserByEmailId));
 adminRouter.put('/id/', withDTO(UpdateUserByIdDTO, updateById));
 adminRouter.delete('/id/', withDTO(GetUserByIdDTO, userDeleteById));
 
-adminRouter.get('/find/', withDTO(GetUserFindDTO, allUsers));
+adminRouter.post('/find/', withDTO(GetUserFindDTO, allUsers));
 module.exports = adminRouter;

@@ -12,7 +12,7 @@ const subjectRouter = express.Router()
 subjectRouter.post('/', withDTO(CreateSubjectDTO, createNewSubject))
 subjectRouter.get('/id/', withDTO(GetSubjectByIdDTO, getSubjectById))
 subjectRouter.get('/code/', withDTO(GetSubjectByCodeDTO, getSubjectByCode))
-subjectRouter.get('/find/', withDTO(GetSubjectFindDTO, getFindSubject))
+subjectRouter.post('/find/', withDTO(GetSubjectFindDTO, getFindSubject))
 subjectRouter.put('/id/', withDTO(UpdateSubjectByIdDTO, updateSubjectById))
 subjectRouter.delete('/id/', withDTO(DeleteSubjectByIdDTO,deleteSubjectById))
 module.exports = subjectRouter

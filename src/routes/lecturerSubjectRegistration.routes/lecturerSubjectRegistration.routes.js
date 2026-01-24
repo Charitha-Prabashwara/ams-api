@@ -10,7 +10,7 @@ const lecturerSubjectRegistrationRouter = express.Router()
 
 lecturerSubjectRegistrationRouter.post('/', withDTO(CreateLectureSubjectRegistrationDTO, createLectureSubjectRegistration))
 lecturerSubjectRegistrationRouter.get('/id/', withDTO(GetLectureSubjectRegistrationByIdDTO, getRegistrationById))
-lecturerSubjectRegistrationRouter.get('/find/', withDTO(GetFindSubjectRegistrationByIdDTO, getFindRegistration))
+lecturerSubjectRegistrationRouter.post('/find/', withDTO(GetFindSubjectRegistrationByIdDTO, getFindRegistration))
 lecturerSubjectRegistrationRouter.put('/id/', withDTO(UpdateLectureSubjectRegistrationDTO, updateRegistrationById))
 lecturerSubjectRegistrationRouter.delete('/id/', withDTO(DeleteLectureSubjectRegistrationByIdDTO, deleteRegistrationById))
 

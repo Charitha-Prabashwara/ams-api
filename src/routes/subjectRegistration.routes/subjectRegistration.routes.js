@@ -9,8 +9,8 @@ const {updateSubjectRegistrationById} = require('../../controllers/subjectRegist
 const subjectRegistrationRouter = express.Router()
 
 subjectRegistrationRouter.post('/', withDTO(CreateSubjectRegistrationDTO, createSubjectRegistration))
-subjectRegistrationRouter.get('/id/', withDTO(GetSubjectRegistrationByIdDTO, getSubjectRegistrationById))
+subjectRegistrationRouter.post('/id/', withDTO(GetSubjectRegistrationByIdDTO, getSubjectRegistrationById))
 subjectRegistrationRouter.put('/id/', withDTO(UpdateSubjectRegistrationByIdDTO, updateSubjectRegistrationById))
-subjectRegistrationRouter.get('/find/', withDTO(GetFindSubjectRegistrationByIdDTO, getFindSubjectRegistrations))
+subjectRegistrationRouter.post('/find/', withDTO(GetFindSubjectRegistrationByIdDTO, getFindSubjectRegistrations))
 subjectRegistrationRouter.delete('/id/', withDTO(DeleteSubjectRegistrationByIdDTO, getFindSubjectRegistrations))
 module.exports = subjectRegistrationRouter
