@@ -7,6 +7,7 @@ module.exports.updateRegistrationById = async(dto, req, res, next)=>{
         const data={
             id:dto.id,
             lecturer:dto.lecturer,
+            subject:dto.subject,
             isActive:dto.isActive,
             deleted:dto.deleted
         }
