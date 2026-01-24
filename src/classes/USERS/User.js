@@ -55,7 +55,7 @@ class User {
     this.last_login = data.last_login;
     this.enable_state = data.enable_state;
     this.deleted = data.deleted;
-    this._department = data.department;
+    this.department = data.department;
     this._type = data.type;
 
     this.createdAt_timestamp = data.createdAt_timestamp;
@@ -84,7 +84,7 @@ class User {
       '_type',
       'createdAt_timestamp',
       'updatedAt_timestamp',
-      '_department',
+      'department',
     ];
 
     const params = {};
@@ -93,7 +93,7 @@ class User {
         params[
           field === '_type'
             ? 'type'
-            : field === '_department'
+            : field === 'department'
               ? 'department'
               : field
         ] = this[field];
