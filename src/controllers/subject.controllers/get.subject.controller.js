@@ -4,7 +4,7 @@ const service = new SubjectService()
 
 exports.getSubjectById = async(dto, req, res, next)=>{
     try {
-        const subject = await service.getSubjectById(dto.id)
+        const subject = await service.getSubjectById(dto.id, [], {deleted:false})
         if(service.isNullSubject(subject)) throw new SubjectNotFoundError()
         return res.status(200).json({ success: true, subject: subject });
     } catch (error) {
@@ -14,7 +14,7 @@ exports.getSubjectById = async(dto, req, res, next)=>{
 
 exports.getSubjectByCode = async(dto, req, res, next)=>{
     try {
-        const subjects = await service.findSubject({code:dto.code}, {limit:1})
+        const subjects = await service.findSubject({code:dto.code, deleted:false}, {limit:1})
         if(service.isNullSubject(subjects[0])) throw new SubjectNotFoundError()
         return res.status(200).json({ success: true, subject: subjects[0] });
     } catch (error) {
@@ -30,7 +30,8 @@ exports.getFindSubject = async(dto, req, res, next)=>{
             credits: dto.credits,
             deleted: dto.deleted,
             createdAt_timestamp: dto.createdAt,
-            updatedAt_timestamp: dto.updatedAt
+            updatedAt_timestamp: dto.updatedAt,
+            deleted:false
 
         }
         const options={

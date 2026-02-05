@@ -56,6 +56,7 @@ exports.getUserByEmailId = async (dto, req, res, next) => {
 };
 
 exports.allUsers = async (dto, req, res, next) => {
+  
   try {
     const data = {
       registration_id: dto.registrationId,
@@ -77,6 +78,7 @@ exports.allUsers = async (dto, req, res, next) => {
       createdAt_timestamp: dto.createdAt,
       updatedAt_timestamp: dto.updatedAt,
       _type: dto.type,
+      
     };
     const options = {
       skip: dto.skip,

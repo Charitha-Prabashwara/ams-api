@@ -7,7 +7,7 @@ const service = new CourseService()
 
 module.exports.getCourseById = async(dto, req, res, next)=>{
     try {
-        const course =await service.getCourseById(dto.id)
+        const course =await service.getCourseById(dto.id, [], {deleted:false})
         if(service.isNullCourse(course)) throw new CourseNotFoundError()
         return res.status(200).json({ success: true, course: course });
     } catch (error) {
@@ -26,7 +26,8 @@ module.exports.getFindCourse = async(dto, req, res, next)=>{
                    deleted:dto.deleted,
                    department: dto.department,
                    createdAt_timestamp: dto.createdAt,
-                   updatedAt_timestamp: dto.updatedAt
+                   updatedAt_timestamp: dto.updatedAt,
+                   deleted:false
                }
 
                const options = {

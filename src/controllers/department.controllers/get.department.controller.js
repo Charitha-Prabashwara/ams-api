@@ -25,6 +25,7 @@ exports.findDepartment = async (dto, req, res, next) => {
       deleted: dto.deleted,
       createdAt_timestamp: dto.createdAt,
       updatedAt_timestamp: dto.updatedAt,
+      deleted:false
     };
 
     const options = {

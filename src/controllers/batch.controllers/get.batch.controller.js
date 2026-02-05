@@ -4,7 +4,7 @@ const {BatchNotFoundError} = require('../../errors')
 
 module.exports.getBatchById = async(dto, req, res, next)=>{
     try {
-        const batch = await service.getBatchById(dto.id)
+        const batch = await service.getBatchById(dto.id, [], {deleted:false})
         if(service.isNullBatch(batch))throw new BatchNotFoundError()
         return res.status(200).json({ success: true, batch: batch });
     } catch (error) {
@@ -23,7 +23,8 @@ module.exports.getFindBatch = async(dto, req, res, next)=>{
             },
             deleted:dto.deleted,
             createdAt_timestamp: dto.createdAt,
-            updatedAt_timestamp: dto.updatedAt
+            updatedAt_timestamp: dto.updatedAt,
+            deleted:false
         }
        
         

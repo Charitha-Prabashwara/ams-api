@@ -8,7 +8,8 @@ exports.deleteDepartmentById = async (dto, req, res, next) => {
       return deptService.updateDepartmentById({ id: dto.id, deleted: true });
     };
     const unsafeDelete = async () => {
-      return deptService.deleteDepartmentById(dto.id);
+      //return deptService.deleteDepartmentById(dto.id);
+      return deptService.updateDepartmentById({ id: dto.id, deleted: true });
     };
 
     const selectMode = async (safe) => {
