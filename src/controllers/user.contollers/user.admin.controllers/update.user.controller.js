@@ -20,7 +20,8 @@ exports.updateById = async (dto, req, res, next) => {
         line2: dto.addressLine2,
         zip: dto.addressZip,
       },
-      _department: dto.departmentId,
+      department: dto.departmentId,
+      enable_state:dto.status
     };
     const user = await userService.findByIdAndUpdate(dto.type, updateObj);
     if (userService.isNullUser(user)) throw new UserUpdateFailed();
