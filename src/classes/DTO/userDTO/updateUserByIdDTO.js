@@ -7,45 +7,46 @@ class UpdateUserByIdDTO {
     const schema = Joi.object({
       id: Joi.objectId().required(),
 
-      registrationId: Joi.string().max(20).required(),
+      registrationId: Joi.string().max(20),
       firstName: Joi.string()
         .pattern(/^[A-Z. ]+$/)
-        .required()
+        
         .messages({
           'string.pattern.base': 'First name must be uppercase letters only',
         }),
 
       lastName: Joi.string()
         .pattern(/^[A-Z. ]+$/)
-        .required()
+        
         .messages({
           'string.pattern.base': 'Last name must be uppercase letters only',
         }),
 
       fullName: Joi.string()
         .pattern(/^[A-Z. ]+$/)
-        .required()
+        
         .messages({
           'string.pattern.base': 'Full name must be uppercase letters only',
         }),
 
       nameWithInitial: Joi.string()
         .pattern(/^[A-Z. ]+$/)
-        .required()
+        
         .messages({
           'string.pattern.base': 'Full name must be uppercase letters only',
         }),
 
-      email: Joi.string().email().required(),
-      addressLine1: Joi.string().required(),
+      email: Joi.string().email(),
+      addressLine1: Joi.string(),
       addressLine2: Joi.string(),
-      addressZip: Joi.number().integer().required(),
+      addressZip: Joi.number().integer(),
 
       type: Joi.string()
         .valid(...userTypes.USER_TYPES)
         .required(),
 
       departmentId:Joi.objectId(),
+      status: Joi.boolean()
     });
 
     const { error, value } = schema.validate(data, { abortEarly: false });
