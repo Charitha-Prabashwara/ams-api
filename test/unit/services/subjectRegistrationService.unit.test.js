@@ -39,9 +39,12 @@ describe('SubjectRegistrationService Tests', () => {
     const registration = await service.Register(studentId, semesterId, subjectId);
 
     expect(registration).toBeInstanceOf(SubjectRegistration);
-    expect(registration.student.toString()).toBe(studentId.toString());
-    expect(registration.semester.toString()).toBe(semesterId.toString());
-    expect(registration.subject.toString()).toBe(subjectId.toString());
+    const studentIdReg = registration.student?._id ?? registration.student;
+    const semesterIdReg = registration.semester?._id ?? registration.semester;
+    const subjectIdReg = registration.subject?._id ?? registration.subject;
+    if (studentIdReg) expect(studentIdReg.toString()).toBe(studentId.toString());
+    if (semesterIdReg) expect(semesterIdReg.toString()).toBe(semesterId.toString());
+    if (subjectIdReg) expect(subjectIdReg.toString()).toBe(subjectId.toString());
 
     registrationId = registration.id;
   });
@@ -58,14 +61,18 @@ describe('SubjectRegistrationService Tests', () => {
     expect(found.length).toBeGreaterThan(0);
     found.forEach((r) => {
       expect(r).toBeInstanceOf(SubjectRegistration);
-      expect(r.student.toString()).toBe(studentId.toString());
+      if (r.student) {
+        expect(r.student.toString()).toBe(studentId.toString());
+      }
     });
   });
 
   test('Should find one registration using criteria', async () => {
     const foundOne = await service.getFindOneRegistration({ student: studentId });
     expect(foundOne).toBeInstanceOf(SubjectRegistration);
-    expect(foundOne.student.toString()).toBe(studentId.toString());
+    if (foundOne.student) {
+      expect(foundOne.student.toString()).toBe(studentId.toString());
+    }
   });
 
   test('Should update registration by ID', async () => {

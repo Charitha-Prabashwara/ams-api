@@ -79,7 +79,7 @@ describe('Course Class Tests', () => {
       expect(c).not.toBe(NullCourse);
       expect(c.code).toBe(initialData.code);
       expect(c.name).toBe(initialData.name);
-      expect(c.department).toStrictEqual(initialData.department);
+      expect(c.department._id.toString()).toBe(initialData.department.toString());
     });
   });
 

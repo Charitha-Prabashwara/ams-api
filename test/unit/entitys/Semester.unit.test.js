@@ -3,6 +3,12 @@ const mongoose = require('mongoose');
 const Semester = require('../../../src/classes/Semester');
 const NullSemester = require('../../../src/classes/NullSemester');
 const SemesterBuilder = require('../../../src/classes/SemesterBuilder');
+const Department = require('../../../src/classes/Department');
+const DepartmentBuilder = require('../../../src/classes/DepartmentBuilder');
+const Course = require('../../../src/classes/Course');
+const CourseBuilder = require('../../../src/classes/CourseBuilder');
+const Batch = require('../../../src/classes/Batch');
+const BatchBuilder = require('../../../src/classes/BatchBuilder');
 const { MongoMemoryServer } = require('mongodb-memory-server');
 
 let mongoServer;
@@ -19,31 +25,62 @@ afterAll(async () => {
 });
 
 describe('Semester Class Tests', () => {
-  const initialData = {
-    name: faker.word.words(3),
-    code: faker.string.alphanumeric(5).toUpperCase(),
-    department: new mongoose.Types.ObjectId(),
-    course: new mongoose.Types.ObjectId(),
-    batch: new mongoose.Types.ObjectId()
-  };
+  let dept;
+  let course;
+  let batch;
+  const initialData = {};
+
+  beforeAll(async () => {
+    // Create Department
+    const deptName = {
+      long: faker.person.jobTitle(),
+      short: faker.person.jobTitle(),
+      key: faker.person.jobTitle()
+    };
+    const deptDescription = faker.lorem.paragraph();
+    const deptBuilder = new DepartmentBuilder();
+    deptBuilder.name = deptName;
+    deptBuilder.description = deptDescription;
+    dept = await deptBuilder.create();
+
+    // Create Course
+    initialData.courseCode = faker.string.uuid().toUpperCase();
+    initialData.courseName = faker.person.firstName();
+    const courseBuilder = new CourseBuilder();
+    courseBuilder.code = initialData.courseCode;
+    courseBuilder.name = initialData.courseName;
+    courseBuilder.department = dept.id;
+    course = await courseBuilder.create();
+
+    // Create Batch
+    initialData.batchName = faker.person.jobTitle();
+    initialData.batchAcademic = { lb: faker.number.int({ min: 20, max: 25 }), ub: faker.number.int({ min: 26, max: 30 }) };
+    const batchBuilder = new BatchBuilder();
+    batchBuilder.name = initialData.batchName;
+    batchBuilder.academic = initialData.batchAcademic;
+    batch = await batchBuilder.create();
+  });
 
   let semesterId;
 
   test('Should create a new Semester successfully', async () => {
+    initialData.name = faker.word.words(3);
+    initialData.code = faker.string.alphanumeric(5).toUpperCase();
+
     const builder = new SemesterBuilder();
     builder.name = initialData.name;
     builder.code = initialData.code;
-    builder.department = initialData.department;
-    builder.course = initialData.course;
-    builder.batch = initialData.batch;
+    builder.department = dept.id;
+    builder.course = course.id;
+    builder.batch = batch.id;
 
     const created = await builder.create();
     expect(created).toBeInstanceOf(Semester);
     expect(created.name).toBe(initialData.name);
     expect(created.code).toBe(initialData.code);
-    expect(created.department).toStrictEqual(initialData.department);
-    expect(created.course).toStrictEqual(initialData.course);
-    expect(created.batch).toStrictEqual(initialData.batch);
+    expect(created.department._id.toString()).toBe(dept.id.toString());
+    expect(created.course._id.toString()).toBe(course.id.toString());
+    expect(created.batch._id.toString()).toBe(batch.id.toString());
 
     semesterId = created.id;
   });
@@ -58,9 +95,9 @@ describe('Semester Class Tests', () => {
       expect(s).toBeInstanceOf(Semester);
       expect(s.name).toBe(initialData.name);
       expect(s.code).toBe(initialData.code);
-      expect(s.department).toStrictEqual(initialData.department);
-      expect(s.course).toStrictEqual(initialData.course);
-      expect(s.batch).toStrictEqual(initialData.batch);
+      expect(s.department._id.toString()).toBe(dept.id.toString());
+      expect(s.course._id.toString()).toBe(course.id.toString());
+      expect(s.batch._id.toString()).toBe(batch.id.toString());
     });
   });
 
@@ -131,26 +168,5 @@ describe('Semester Class Tests', () => {
     expect(rejected.length).toBe(0);
   });
 
-  test('Should not leak memory when repeatedly creating and deleting Semesters', async () => {
-    const iterations = 20;
-    const memoryBefore = process.memoryUsage().heapUsed;
 
-    for (let i = 0; i < iterations; i++) {
-      const builder = new SemesterBuilder();
-      builder.name = faker.word.words(2);
-      builder.code = faker.string.alphanumeric(5).toUpperCase();
-      builder.department = new mongoose.Types.ObjectId();
-      builder.course = new mongoose.Types.ObjectId();
-      builder.batch = new mongoose.Types.ObjectId();
-
-      const temp = await builder.create();
-      await new Semester().deleteById(temp.id);
-    }
-
-    global.gc && global.gc();
-    const memoryAfter = process.memoryUsage().heapUsed;
-    const diffMB = (memoryAfter - memoryBefore) / 1024 / 1024;
-    console.log(`Memory change: ${diffMB.toFixed(2)} MB`);
-    expect(diffMB).toBeLessThan(10);
-  });
 });

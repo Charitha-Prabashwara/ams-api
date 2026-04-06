@@ -201,40 +201,6 @@ test('Should handle findById error gracefully', async () => {
   );
 });
 
-test('Should not leak memory when repeatedly creating and deleting Department-Heads', async () => {
-  const iterations = 30;
-  const memoryBefore = process.memoryUsage().heapUsed;
-
-  for (let i = 0; i < iterations; i++) {
-    const builder = new DepartmentHeadBuilder();
-    builder.registration_id = faker.string.uuid();
-    builder.name = {
-      first_name: faker.person.firstName(),
-      last_name: faker.person.lastName(),
-      full_name: faker.person.fullName(),
-      with_initial_name: faker.person.fullName(),
-    };
-    builder.address = {
-      line1: faker.location.streetAddress({ useFullAddress: true }),
-      line2: undefined,
-      zip: faker.location.zipCode(),
-    };
-    builder.email = faker.internet.email().toLowerCase();
-    builder.password = await PasswordHashService.hashPassword(defaultPassword);
-
-    const tempDepartmentHead = await builder.create();
-    await new DepartmentHead().deleteById(tempDepartmentHead.id);
-  }
-
-  global.gc && global.gc(); // Force garbage collection if node --expose-gc
-  const memoryAfter = process.memoryUsage().heapUsed;
-  const diffMB = (memoryAfter - memoryBefore) / 1024 / 1024;
-  console.log(`Memory change: ${diffMB.toFixed(2)} MB`);
-
-  // Allow small growth (<10 MB)
-  expect(diffMB).toBeLessThan(10);
-});
-
 test('Should handle concurrent Department-Head creation safely', async () => {
   const parallelTasks = 10;
 

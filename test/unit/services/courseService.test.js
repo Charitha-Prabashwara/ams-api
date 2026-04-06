@@ -107,7 +107,7 @@ describe('Course service test', () => {
             expect(course).not.toBe(NullCourse)
             expect(course).toBeInstanceOf(Course)
             expect(course.department).toBeDefined()
-            expect(course.department).toStrictEqual(department)
+            expect(course.department._id.toString()).toBe(department.toString())
         });
       })
     test('should update course by course id', async () => {
