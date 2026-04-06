@@ -109,6 +109,15 @@ class Lecture {
     }
   }
 
+  async findOne(data={}, options={}){
+    try {
+      const lecture = await repository.findOne(data, options)
+      return this.#wrapToLecture(lecture)
+    } catch (error) {
+      throw error
+    }
+  }
+
   async deleteOne(select=[]) {
     try {
       const params = this.#matchFieldsAndParams();
