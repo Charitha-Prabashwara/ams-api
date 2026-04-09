@@ -58,6 +58,11 @@ const {GetLectureSubjectRegistrationByIdDTO} = require("./lectureSubjectRegistra
 const {UpdateLectureSubjectRegistrationDTO} = require('./lectureSubjectRegistrationDTO/updateLectSubRegistrationByIdDTO')
 const {DeleteLectureSubjectRegistrationByIdDTO} = require('./lectureSubjectRegistrationDTO/deleteLectSubRegistrationByIdDTO')
 
+const {CreateLectureDTO} = require("./LectureDTO/createLectureDTO")
+const {GetLectureByIdDTO} = require("./LectureDTO/getLectureByIdDTO")
+const {UpdateLectureByIdDTO} = require('./LectureDTO/updateLectureByIdDTO')
+const {GetFindLectureDTO} = require('./LectureDTO/getFindLectureDTO')
+const {DeleteLectureByIdDTO} = require('./LectureDTO/deleteLectureByIdDTO')
 module.exports = {
   CreateUserDTO,
   ErrorResponseDTO,
@@ -101,6 +106,11 @@ module.exports = {
   CreateLectureSubjectRegistrationDTO,
   GetLectureSubjectRegistrationByIdDTO,
   UpdateLectureSubjectRegistrationDTO,
-  DeleteLectureSubjectRegistrationByIdDTO
+  DeleteLectureSubjectRegistrationByIdDTO,
+  CreateLectureDTO,
+  GetLectureByIdDTO,
+  UpdateLectureByIdDTO,
+  GetFindLectureDTO,
+  DeleteLectureByIdDTO
   
 };
