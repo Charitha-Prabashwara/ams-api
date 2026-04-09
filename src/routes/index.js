@@ -7,7 +7,7 @@ const semesterRouter = require('./semester.routes/semester.routes')
 const batchRouter = require('./batch.routes/batch.routes')
 const subjectRegistrationRouter = require('./subjectRegistration.routes/subjectRegistration.routes')
 const lecturerSubjectRegistrationRouter = require('./lecturerSubjectRegistration.routes/lecturerSubjectRegistration.routes')
-
+const lectureRouter = require('./lecture.routes/lecture.routes')
 module.exports = (app) => {
   app.use('/api/v1', base_router);
   app.use('/api/v1/admin', adminRouter);
@@ -18,5 +18,6 @@ module.exports = (app) => {
   app.use('/api/v1/batch', batchRouter);
   app.use('/api/v1/subject-registration', subjectRegistrationRouter);
   app.use('/api/v1/lecturer-subject-registration', lecturerSubjectRegistrationRouter);
+  app.use('/api/v1/lecture', lectureRouter);
 };
 
