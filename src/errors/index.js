@@ -44,6 +44,8 @@ const BatchNotFoundError = require('./BatchServiceErrors/BatchNotFoundError')
 const SemesterNotFoundError = require('./SemesterServiceErrors/SemesterNotFoundError')
 const SubjectRegistrationNotFoundError = require('./SubjectRegistrationServiceErrors/SubjectRegistrationNotFoundError')
 const LecturerSubjectRegistrationNotFoundError = require('./LecturerSubjectRegistrationServiceErrors/LecturerSubjectRegistrationNotFoundError')
+
+const LectureNotFoundError = require('./LectureServiceErrors/LectureNotFoundError')
 module.exports = {
   UserNotFoundError,
   InvalidUserIdError,
@@ -81,5 +83,6 @@ module.exports = {
   BatchNotFoundError,
   SemesterNotFoundError,
   SubjectRegistrationNotFoundError,
-  LecturerSubjectRegistrationNotFoundError
+  LecturerSubjectRegistrationNotFoundError,
+  LectureNotFoundError
 };
