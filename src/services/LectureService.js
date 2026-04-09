@@ -21,6 +21,29 @@ class LectureService{
         return builder.create()
     }
 
+    /**
+     * Update an existing lecture by its ID.
+     *
+     * @async
+     * @param {Object} data - Update payload.
+     * @param {String} data.id - ID of the subject to update. (required)
+     * @param {String} [data.topic] - lecture topic name.
+     * @param {String} [data.lecturer] - lecturer id.
+     * @param {Number} [data.subject] - Subject id.
+     * @param {Boolean} [data.semester] - Semester id.
+     * @param {Boolean} [data.scheduledTime] - scheduled time.
+     * @param {Boolean} [data.actualStartTime] - actual started time.
+     * @param {Boolean} [data.endTime] - actual ended time.
+     * @param {Boolean} [data.state] - lecture state.
+     * @param {Boolean} [data.deleted] - Update deleted status.
+     * @param {Array<string>} [select=[]] - Fields to return after update.
+     *
+     * @returns {Promise<Object|null>} Updated subject object, or null if not found.
+     */
+    async updateLectureById(data={}, select=[]){
+        return lectureClass.findByIdAndUpdate(data, select)
+    }
+
     async findLecture(data={}, options={}){
         const lecture = new Lecture()
 
