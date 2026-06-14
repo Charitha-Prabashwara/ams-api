@@ -35,7 +35,7 @@ class BaseRepository {
 
     this._validateId(id);
     const found_user = await this.model
-      .findByIdAndUpdate(id.toString(), user, { new: true, lean: true })
+      .findByIdAndUpdate(id.toString(), user, { new: true, lean: true,  runValidators: true })
       .select(this._selectProjection(select))
       .lean();
     return found_user;

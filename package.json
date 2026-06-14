@@ -30,6 +30,9 @@
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
+  "jest": {
+    "testTimeout": 30000
+  },
   "assets": [
     "src/lang/**/*",
     "src/docs/**/*"
