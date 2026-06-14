@@ -12,6 +12,7 @@ class UpdateLectureByIdDTO {
         subject: Joi.objectId(),
         semester: Joi.objectId(),
         scheduledTime: Joi.date(),
+        actualStartTime: Joi.date(),
         endTime:Joi.date(),
         state:Joi.string(),
         deleted:Joi.boolean()
