@@ -135,8 +135,10 @@ stages:
           - checkout: none  # no source code needed in deploy stage
 
           - script: |
-              echo "$(SSH_PRIVATE_KEY)" > /tmp/deploy_key
+              echo "$(SSH_PRIVATE_KEY)" | base64 -d > /tmp/deploy_key
               chmod 600 /tmp/deploy_key
+              # Validate key is valid
+              ssh-keygen -l -f /tmp/deploy_key
             displayName: "Setup SSH key"
 
           - script: |
