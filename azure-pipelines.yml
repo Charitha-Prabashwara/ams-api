@@ -1,18 +1,22 @@
 # ─────────────────────────────────────────────────────────────────────────────
 # AMS API — Azure Pipelines CI/CD
 #
-# Required Azure DevOps Variable Group: "ams-api-vars"
-#   ACR_LOGIN_SERVER   e.g. myregistry.azurecr.io
-#   ACR_USERNAME       Service principal / admin username
-#   ACR_PASSWORD       Service principal / admin password  (mark as secret)
-#   SSH_HOST           VM public IP or hostname
-#   SSH_USER           e.g. azureuser
-#   SSH_PRIVATE_KEY    Contents of the VM private key     (mark as secret)
-#   DEPLOY_PATH        e.g. /home/azureuser/ams
+# Variable Group "ams-api-vars" in Azure DevOps Library:
 #
-# Optional (have defaults below):
-#   IMAGE_NAME         defaults to  ams-api
-#   CONTAINER_PORT     defaults to  8080
+#   ACR_LOGIN_SERVER   myregistry.azurecr.io          (plain)
+#   ACR_USERNAME       <acr-username>                  (plain)
+#   ACR_PASSWORD       <acr-password>                  (secret 🔒)
+#   SSH_HOST           <vm-ip or hostname>             (plain)
+#   SSH_USER           azureuser                       (plain)
+#   SSH_PRIVATE_KEY    <full PEM key content>          (secret 🔒)
+#   DEPLOY_PATH        /home/azureuser/ams-api         (plain)
+#
+# Runtime env vars (injected into server .env on deploy):
+#   DB_MONGODB_URI          (secret 🔒)
+#   DB_MONGODB_DATABASE     (plain)
+#   ACCESS_TOKEN_SECRET     (secret 🔒)
+#   REFRESH_TOKEN_SECRET    (secret 🔒)
+#   ALLOWED_ORIGINS         e.g. ["https://yourdomain.com"]
 # ─────────────────────────────────────────────────────────────────────────────
 
 trigger:
@@ -35,7 +39,7 @@ pr:
 variables:
   - group: ams-api-vars
   - name: IMAGE_NAME
-    value: $[coalesce(variables['IMAGE_NAME'], 'ams-api')]
+    value: ams-api
   - name: IMAGE_TAG
     value: $(Build.BuildId)
   - name: FULL_IMAGE
@@ -77,10 +81,10 @@ stages:
               NODE_ENV: test
 
   # ───────────────────────────────────────────────────────────────────────────
-  # Stage 2 — Build & Push Docker image to ACR
+  # Stage 2 — Build Docker image and push to Azure Container Registry
   # ───────────────────────────────────────────────────────────────────────────
   - stage: Build
-    displayName: "Build & Push Image"
+    displayName: "Build & Push to ACR"
     dependsOn: CI
     condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
     jobs:
@@ -89,22 +93,16 @@ stages:
         pool:
           vmImage: ubuntu-latest
         steps:
-          - task: Docker@2
-            displayName: "Login to ACR"
-            inputs:
-              command: login
-              containerRegistry: ""   # leave blank — using inline credentials below
-          
           - script: |
-              echo "$(ACR_PASSWORD)" | docker login $(ACR_LOGIN_SERVER) \
-                --username $(ACR_USERNAME) --password-stdin
-            displayName: "Docker login to ACR"
+              echo "$(ACR_PASSWORD)" | docker login "$(ACR_LOGIN_SERVER)" \
+                --username "$(ACR_USERNAME)" --password-stdin
+            displayName: "Login to ACR"
 
           - script: |
               docker build \
                 --target production \
-                --tag $(FULL_IMAGE) \
-                --tag $(LATEST_IMAGE) \
+                --tag "$(FULL_IMAGE)" \
+                --tag "$(LATEST_IMAGE)" \
                 --label "build=$(Build.BuildId)" \
                 --label "commit=$(Build.SourceVersion)" \
                 --label "branch=$(Build.SourceBranchName)" \
@@ -112,17 +110,13 @@ stages:
             displayName: "Build Docker image"
 
           - script: |
-              docker push $(FULL_IMAGE)
-              docker push $(LATEST_IMAGE)
+              docker push "$(FULL_IMAGE)"
+              docker push "$(LATEST_IMAGE)"
             displayName: "Push to ACR"
 
-          - script: |
-              echo "##vso[task.setvariable variable=FULL_IMAGE;isOutput=true]$(FULL_IMAGE)"
-            name: imageOutput
-            displayName: "Export image name"
-
   # ───────────────────────────────────────────────────────────────────────────
-  # Stage 3 — Deploy to VM via SSH
+  # Stage 3 — Deploy to server via SSH
+  # Pulls the new image from ACR and restarts the container using docker compose
   # ───────────────────────────────────────────────────────────────────────────
   - stage: Deploy
     displayName: "Deploy to Server"
@@ -130,7 +124,7 @@ stages:
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
     jobs:
       - deployment: DeployAPI
-        displayName: "Deploy API Container"
+        displayName: "Deploy ams-api"
         pool:
           vmImage: ubuntu-latest
         environment: production
@@ -139,40 +133,78 @@ stages:
             deploy:
               steps:
                 - script: |
-                    # Write SSH key to file
                     echo "$(SSH_PRIVATE_KEY)" > /tmp/deploy_key
                     chmod 600 /tmp/deploy_key
                   displayName: "Setup SSH key"
 
                 - script: |
                     ssh -o StrictHostKeyChecking=no \
+                        -o BatchMode=yes \
                         -i /tmp/deploy_key \
-                        $(SSH_USER)@$(SSH_HOST) << 'ENDSSH'
+                        "$(SSH_USER)@$(SSH_HOST)" bash << REMOTE
                       set -e
 
-                      # Login to ACR on remote host
-                      echo "$(ACR_PASSWORD)" | docker login $(ACR_LOGIN_SERVER) \
-                        --username $(ACR_USERNAME) --password-stdin
+                      # Login to ACR
+                      echo "${ACR_PASSWORD}" | docker login "${ACR_LOGIN_SERVER}" \
+                        --username "${ACR_USERNAME}" --password-stdin
 
-                      # Pull latest image
-                      docker pull $(FULL_IMAGE)
+                      # Write .env to deploy path (all values from pipeline secrets)
+                      mkdir -p "${DEPLOY_PATH}"
+                      cat > "${DEPLOY_PATH}/.env" << 'ENVEOF'
+                    APPLICATION_PORT=8080
+                    NODE_ENV=production
+                    DB_MONGODB_URI=${DB_MONGODB_URI}
+                    DB_MONGODB_DATABASE=${DB_MONGODB_DATABASE}
+                    SLAT_ROUNDS=10
+                    ACCESS_TOKEN_SECRET=${ACCESS_TOKEN_SECRET}
+                    REFRESH_TOKEN_SECRET=${REFRESH_TOKEN_SECRET}
+                    ACCESS_TOKEN_TTL=1h
+                    REFRESH_TOKEN_TTL=30d
+                    REFRESH_TOKEN_COOKIE_TTL=3600
+                    ALLOWED_ORIGINS=${ALLOWED_ORIGINS}
+                    ALLOWED_METHODS=["GET","HEAD","PUT","PATCH","POST","DELETE"]
+                    ALLOWED_HEADERS=["Origin","X-Requested-With","Content-Type","Accept","Authorization","X-Token"]
+                    ENVEOF
 
-                      # Update the running container (zero-downtime swap)
+                      # Pull the specific versioned image from ACR
+                      docker pull "${FULL_IMAGE}"
+
+                      # Stop and remove old container
                       docker stop ams-api 2>/dev/null || true
                       docker rm   ams-api 2>/dev/null || true
 
-                      # Source the .env from deploy path and start container
-                      cd $(DEPLOY_PATH)
-                      docker compose pull ams-api
-                      docker compose up -d ams-api
+                      # Run new container directly (no compose build needed)
+                      docker run -d \
+                        --name ams-api \
+                        --restart unless-stopped \
+                        --env-file "${DEPLOY_PATH}/.env" \
+                        -p 8080:8080 \
+                        --health-cmd "wget -qO- http://localhost:8080/api/v1 || exit 1" \
+                        --health-interval 30s \
+                        --health-timeout 10s \
+                        --health-retries 3 \
+                        --health-start-period 30s \
+                        "${FULL_IMAGE}"
 
-                      # Clean up old images (keep last 3)
+                      # Retag as :latest locally
+                      docker tag "${FULL_IMAGE}" "${LATEST_IMAGE}"
+
+                      # Prune old images
                       docker image prune -f
-                    ENDSSH
+                    REMOTE
                   displayName: "SSH deploy to VM"
                   env:
                     ACR_PASSWORD: $(ACR_PASSWORD)
-                    SSH_PRIVATE_KEY: $(SSH_PRIVATE_KEY)
+                    ACR_LOGIN_SERVER: $(ACR_LOGIN_SERVER)
+                    ACR_USERNAME: $(ACR_USERNAME)
+                    FULL_IMAGE: $(FULL_IMAGE)
+                    LATEST_IMAGE: $(LATEST_IMAGE)
+                    DEPLOY_PATH: $(DEPLOY_PATH)
+                    DB_MONGODB_URI: $(DB_MONGODB_URI)
+                    DB_MONGODB_DATABASE: $(DB_MONGODB_DATABASE)
+                    ACCESS_TOKEN_SECRET: $(ACCESS_TOKEN_SECRET)
+                    REFRESH_TOKEN_SECRET: $(REFRESH_TOKEN_SECRET)
+                    ALLOWED_ORIGINS: $(ALLOWED_ORIGINS)
 
                 - script: rm -f /tmp/deploy_key
                   displayName: "Cleanup SSH key"
