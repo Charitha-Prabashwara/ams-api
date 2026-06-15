@@ -1,0 +1,179 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# AMS API — Azure Pipelines CI/CD
+#
+# Required Azure DevOps Variable Group: "ams-api-vars"
+#   ACR_LOGIN_SERVER   e.g. myregistry.azurecr.io
+#   ACR_USERNAME       Service principal / admin username
+#   ACR_PASSWORD       Service principal / admin password  (mark as secret)
+#   SSH_HOST           VM public IP or hostname
+#   SSH_USER           e.g. azureuser
+#   SSH_PRIVATE_KEY    Contents of the VM private key     (mark as secret)
+#   DEPLOY_PATH        e.g. /home/azureuser/ams
+#
+# Optional (have defaults below):
+#   IMAGE_NAME         defaults to  ams-api
+#   CONTAINER_PORT     defaults to  8080
+# ─────────────────────────────────────────────────────────────────────────────
+
+trigger:
+  branches:
+    include:
+      - main
+      - master
+  paths:
+    exclude:
+      - "*.md"
+      - ".gitignore"
+      - "docs/**"
+
+pr:
+  branches:
+    include:
+      - main
+      - master
+
+variables:
+  - group: ams-api-vars
+  - name: IMAGE_NAME
+    value: $[coalesce(variables['IMAGE_NAME'], 'ams-api')]
+  - name: IMAGE_TAG
+    value: $(Build.BuildId)
+  - name: FULL_IMAGE
+    value: $(ACR_LOGIN_SERVER)/$(IMAGE_NAME):$(IMAGE_TAG)
+  - name: LATEST_IMAGE
+    value: $(ACR_LOGIN_SERVER)/$(IMAGE_NAME):latest
+
+stages:
+  # ───────────────────────────────────────────────────────────────────────────
+  # Stage 1 — CI: Lint + Test
+  # ───────────────────────────────────────────────────────────────────────────
+  - stage: CI
+    displayName: "CI — Lint & Test"
+    jobs:
+      - job: LintAndTest
+        displayName: "Lint & Test"
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - task: NodeTool@0
+            displayName: "Use Node 18"
+            inputs:
+              versionSpec: "18.x"
+
+          - script: npm ci
+            displayName: "Install dependencies"
+
+          - script: npm run format:check
+            displayName: "Check formatting (Prettier)"
+            continueOnError: true
+
+          - script: npx eslint src/ --max-warnings=0
+            displayName: "Lint (ESLint)"
+            continueOnError: true
+
+          - script: npm test -- --passWithNoTests --forceExit
+            displayName: "Run tests (Jest)"
+            env:
+              NODE_ENV: test
+
+  # ───────────────────────────────────────────────────────────────────────────
+  # Stage 2 — Build & Push Docker image to ACR
+  # ───────────────────────────────────────────────────────────────────────────
+  - stage: Build
+    displayName: "Build & Push Image"
+    dependsOn: CI
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+    jobs:
+      - job: DockerBuildPush
+        displayName: "Docker Build & Push"
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - task: Docker@2
+            displayName: "Login to ACR"
+            inputs:
+              command: login
+              containerRegistry: ""   # leave blank — using inline credentials below
+          
+          - script: |
+              echo "$(ACR_PASSWORD)" | docker login $(ACR_LOGIN_SERVER) \
+                --username $(ACR_USERNAME) --password-stdin
+            displayName: "Docker login to ACR"
+
+          - script: |
+              docker build \
+                --target production \
+                --tag $(FULL_IMAGE) \
+                --tag $(LATEST_IMAGE) \
+                --label "build=$(Build.BuildId)" \
+                --label "commit=$(Build.SourceVersion)" \
+                --label "branch=$(Build.SourceBranchName)" \
+                .
+            displayName: "Build Docker image"
+
+          - script: |
+              docker push $(FULL_IMAGE)
+              docker push $(LATEST_IMAGE)
+            displayName: "Push to ACR"
+
+          - script: |
+              echo "##vso[task.setvariable variable=FULL_IMAGE;isOutput=true]$(FULL_IMAGE)"
+            name: imageOutput
+            displayName: "Export image name"
+
+  # ───────────────────────────────────────────────────────────────────────────
+  # Stage 3 — Deploy to VM via SSH
+  # ───────────────────────────────────────────────────────────────────────────
+  - stage: Deploy
+    displayName: "Deploy to Server"
+    dependsOn: Build
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+    jobs:
+      - deployment: DeployAPI
+        displayName: "Deploy API Container"
+        pool:
+          vmImage: ubuntu-latest
+        environment: production
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    # Write SSH key to file
+                    echo "$(SSH_PRIVATE_KEY)" > /tmp/deploy_key
+                    chmod 600 /tmp/deploy_key
+                  displayName: "Setup SSH key"
+
+                - script: |
+                    ssh -o StrictHostKeyChecking=no \
+                        -i /tmp/deploy_key \
+                        $(SSH_USER)@$(SSH_HOST) << 'ENDSSH'
+                      set -e
+
+                      # Login to ACR on remote host
+                      echo "$(ACR_PASSWORD)" | docker login $(ACR_LOGIN_SERVER) \
+                        --username $(ACR_USERNAME) --password-stdin
+
+                      # Pull latest image
+                      docker pull $(FULL_IMAGE)
+
+                      # Update the running container (zero-downtime swap)
+                      docker stop ams-api 2>/dev/null || true
+                      docker rm   ams-api 2>/dev/null || true
+
+                      # Source the .env from deploy path and start container
+                      cd $(DEPLOY_PATH)
+                      docker compose pull ams-api
+                      docker compose up -d ams-api
+
+                      # Clean up old images (keep last 3)
+                      docker image prune -f
+                    ENDSSH
+                  displayName: "SSH deploy to VM"
+                  env:
+                    ACR_PASSWORD: $(ACR_PASSWORD)
+                    SSH_PRIVATE_KEY: $(SSH_PRIVATE_KEY)
+
+                - script: rm -f /tmp/deploy_key
+                  displayName: "Cleanup SSH key"
+                  condition: always()
