@@ -74,6 +74,8 @@ stages:
           - script: npx eslint src/ --max-warnings=0
             displayName: "Lint (ESLint)"
             continueOnError: true
+            env:
+              ESLINT_USE_FLAT_CONFIG: "false"
 
           - script: npm test -- --passWithNoTests --forceExit
             displayName: "Run tests (Jest)"
