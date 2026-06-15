@@ -7,7 +7,7 @@ WORKDIR /app
 COPY package.json package-lock.json* ./
 
 # Install production dependencies only
-RUN npm ci --omit=dev
+RUN npm install --omit=dev
 
 # ─── Stage 2: Production Image ───────────────────────────────────────────────
 FROM node:18-alpine AS production
