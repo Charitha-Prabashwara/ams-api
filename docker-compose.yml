@@ -32,6 +32,7 @@ services:
       - logs:/app/logs
     networks:
       - ams-network
+      - ams-web_ams-network
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:${APPLICATION_PORT:-8080}/api/v1"]
       interval: 30s
@@ -48,3 +49,5 @@ volumes:
 networks:
   ams-network:
     driver: bridge
+  ams-web_ams-network:
+    external: true   # created and owned by the ams-web compose project
